@@ -41,4 +41,19 @@ public interface UserService {
     
     //소셜 신규 회원 등록
     void insertSocialUser(Map<String, String> param);
+    
+    // 이메일로 아이디 찾기
+    String findIdByEmail(String email);
+    
+    // 아이디, 이메일로 비밀번호 찾기
+    String findPwByIdEmail(Map<String, String> param);
+    
+    // 비밀번호 재설정 토큰 저장
+    int saveResetToken(Map<String, String> param);
+    
+    // 토큰으로 사용자 조회
+    UserDTO findUserByResetToken(String token);
+    
+    // 토큰으로 비밀번호 업데이트
+    int updatePasswordByToken(Map<String, String> param);
 }

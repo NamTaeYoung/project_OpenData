@@ -38,7 +38,7 @@ public class UserServicelmpl implements UserService {
 //        return sqlSession.update(
 //            "com.boot.dao.UserDAO.updateUser", param);
 //    }
-//    
+    
     /** 회원가입 로직 */
     public int register(Map<String, String> param) {
         // User.xml 의 <insert id="register"> 문 실행
@@ -96,5 +96,34 @@ public class UserServicelmpl implements UserService {
     public void insertSocialUser(Map<String, String> param) {
         sqlSession.insert("com.boot.dao.UserDAO.insertSocialUser", param);
     }
+    
+    // 이메일로 아이디 찾기
+    @Override
+    public String findIdByEmail(String email) {
+        return sqlSession.selectOne("com.boot.dao.UserDAO.findIdByEmail", email);
+    }
+    
+    // 아이디, 이메일로 비밀번호 찾기
+    @Override
+    public String findPwByIdEmail(Map<String, String> param) {
+        return sqlSession.selectOne("com.boot.dao.UserDAO.findPwByIdEmail", param);
+    }
+    
+    // 비밀번호 재설정 토큰 저장
+    @Override
+    public int saveResetToken(Map<String, String> param) {
+        return sqlSession.update("com.boot.dao.UserDAO.saveResetToken", param);
+    }
+    
+    // 토큰으로 사용자 조회
+    @Override
+    public UserDTO findUserByResetToken(String token) {
+        return sqlSession.selectOne("com.boot.dao.UserDAO.findUserByResetToken", token);
+    }
+    
+    // 토큰으로 비밀번호 업데이트
+    @Override
+    public int updatePasswordByToken(Map<String, String> param) {
+        return sqlSession.update("com.boot.dao.UserDAO.updatePasswordByToken", param);
+    }
 }
-

@@ -383,9 +383,9 @@
     <div class="notice-container">
       <div class="notice-header">
         <h1 class="notice-title">공지사항</h1>
-        <%-- 관리자만 보이도록: <c:if test="${sessionScope.isAdmin == true}">
-        <a href="/notice/write" class="write-btn">글쓰기</a>
-        </c:if> --%>
+        <c:if test="${sessionScope.isAdmin == true}">
+          <a href="/notice/write" class="write-btn">글쓰기</a>
+        </c:if>
       </div>
 
       <div class="notice-table-wrapper">

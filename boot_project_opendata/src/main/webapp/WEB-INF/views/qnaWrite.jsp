@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>글쓰기 - 게시판</title>
+  <title>글쓰기 - QnA</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
@@ -101,6 +101,7 @@
       opacity: .95;
     }
     .promo-nav a:hover::after{ transform: scaleX(1); }
+    .promo-nav a.active::after{ transform: scaleX(1); }
     .promo-nav a + a::before{
       content: "";
       position: absolute;
@@ -360,7 +361,7 @@
         <a href="/main" class="nav-category">상세정보</a>
         <a href="/board" class="nav-board">게시판</a>
         <a href="/notice" class="nav-notice">공지사항</a>
-        <a href="/qna" class="nav-qna">QnA</a>
+        <a href="/qna" class="nav-qna active">QnA</a>
       </div>
     </div>
   </div>
@@ -369,12 +370,12 @@
   <section class="write-section">
     <div class="write-container">
       <div class="write-header">
-        <h1 class="write-title">글쓰기</h1>
+        <h1 class="write-title">QnA 글쓰기</h1>
       </div>
 
-      <form class="write-form" id="writeForm" method="post" action="/board/write" enctype="multipart/form-data">
+      <form class="write-form" id="writeForm" method="post" action="/qna/write" enctype="multipart/form-data">
         <%-- 백엔드 연동 시: 수정 모드일 경우 id 추가
-        <input type="hidden" name="id" value="${board.id}">
+        <input type="hidden" name="id" value="${qna.id}">
         --%>
 
         <div class="form-group">
@@ -407,7 +408,7 @@
         </div>
 
         <div class="form-actions">
-          <button type="button" class="btn btn-cancel" onclick="location.href='/board'">취소</button>
+          <button type="button" class="btn btn-cancel" onclick="location.href='/qna'">취소</button>
           <button type="submit" class="btn btn-submit">등록</button>
         </div>
       </form>
@@ -568,7 +569,7 @@
 
       // 백엔드 연동 시: FormData로 파일 전송
       // const formData = new FormData(this);
-      // fetch('/board/write', {
+      // fetch('/qna/write', {
       //   method: 'POST',
       //   body: formData
       // }).then(response => {
@@ -578,4 +579,3 @@
   </script>
 </body>
 </html>
-
