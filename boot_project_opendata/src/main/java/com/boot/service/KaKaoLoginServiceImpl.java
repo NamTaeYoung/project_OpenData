@@ -1,5 +1,6 @@
 package com.boot.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -19,8 +20,11 @@ import com.boot.dto.SocialUserDTO;
 public class KaKaoLoginServiceImpl implements SocialLoginService {
 
     // 🔑 카카오 개발자 REST API 키 (본인 앱에서 발급받은 키로 교체)
-    private final String clientId = "a7dbe8639d860d6cc00ef0b2a62cab2a";
-    private final String redirectUri = "http://localhost:8484/oauth/kakao";
+    @Value("${kakao.client.id}")
+    private String clientId;
+
+    @Value("${kakao.redirect.uri}")
+    private String redirectUri;
 
     /**
      * 인가 코드(code)를 사용해 Access Token 발급

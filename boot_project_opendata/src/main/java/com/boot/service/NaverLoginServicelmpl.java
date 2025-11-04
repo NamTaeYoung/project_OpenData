@@ -1,5 +1,6 @@
 package com.boot.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -19,9 +20,15 @@ import com.boot.dto.SocialUserDTO;
 public class NaverLoginServicelmpl implements SocialLoginService {
 
     // 네이버 개발자 등록 후 받은 Client ID / Secret
-    private final String clientId = "fNjqJokPMPh1YwLl6Ta4";
-    private final String clientSecret = "xcQyVexGqe";
-    private final String redirectUri = "http://localhost:8484/oauth/naver";
+    @Value("${naver.client.id}")
+    private String clientId;
+
+    @Value("${naver.client.secret}")
+    private String clientSecret;
+
+    @Value("${naver.redirect.uri}")
+    private String redirectUri;
+
 
     /**
      * 인가 코드(code)를 사용해 Access Token 발급
