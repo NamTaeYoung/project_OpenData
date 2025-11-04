@@ -1,0 +1,33 @@
+-- 시퀀스 생성
+CREATE SEQUENCE SEQ_FAVORITE_STATION
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+-- 테이블 생성
+CREATE TABLE FAVORITE_STATION (
+  favorite_id     NUMBER PRIMARY KEY,
+  user_id         VARCHAR2(64)    NOT NULL,
+  station_name    VARCHAR2(100)   NOT NULL,
+  dm_y            NUMBER(9,6)     NOT NULL,
+  dm_x            NUMBER(9,6)     NOT NULL,
+  pm10_value      NUMBER(6),
+  pm25_value      NUMBER(6),
+  o3_value        NUMBER(8,4),
+  no2_value       NUMBER(8,4),
+  co_value        NUMBER(8,4),
+  so2_value       NUMBER(8,4),
+  created_at      TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL,
+  updated_at      TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL
+);
+
+-- 트리거 생성
+CREATE OR REPLACE TRIGGER TRG_FAVORITE_STATION_PK
+BEFORE INSERT ON FAVORITE_STATION
+FOR EACH ROW
+WHEN (NEW.favorite_id IS NULL)
+BEGIN
+  :NEW.favorite_id := SEQ_FAVORITE_STATION.NEXTVAL;
+END;
+/
