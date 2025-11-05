@@ -41,9 +41,9 @@
     <div class="promo-content">
       <div class="promo-nav">
         <a href="/adminMain" class="nav-category">상세정보</a>
-        <a href="/boardManagement" class="nav-board active">게시판관리</a>
-        <a href="/notice" class="nav-notice">공지사항관리</a>
-        <a href="/qna" class="nav-qna">QnA관리</a>
+        <a href="/boardManagement" class="nav-board">게시판관리</a>
+        <a href="/noticeMangement" class="nav-notice">공지사항관리</a>
+        <a href="/qnaMangement" class="nav-qna">QnA관리</a>
       </div>
     </div>
   </div>
@@ -53,7 +53,6 @@
     <div class="board-container">
       <div class="board-header">
         <h1 class="board-title">게시판</h1>
-        <a href="/board/write" class="write-btn">글쓰기</a>
       </div>
 
       <div class="board-table-wrapper">
