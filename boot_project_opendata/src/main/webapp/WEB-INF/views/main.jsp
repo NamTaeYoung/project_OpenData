@@ -30,7 +30,7 @@
           <c:when test="${empty sessionScope.loginDisplayName or sessionScope.loginDisplayName == null}">
             <a href="<c:url value='/login'/>">로그인</a>
             <a href="<c:url value='/register'/>">회원가입</a>
-            <a href="<c:url value='/login?admin=true'/>">관리자정보</a>
+            <a href="<c:url value='/admin/login'/>">관리자정보</a>
           </c:when>
           <%-- 로그인 후 --%>
           <c:otherwise>
