@@ -94,11 +94,17 @@
         </c:if>
 
         <!-- 버튼 -->
-        <div class="form-actions">
-          <button type="button" class="btn btn-list" onclick="location.href='/board/list'">목록</button>
-          <button type="button" class="btn btn-edit" onclick="location.href='/board/edit/${board.id}'">수정</button>
-          <button type="button" class="btn btn-delete" onclick="if(confirm('삭제하시겠습니까?')) location.href='/board/delete/${board.id}'">삭제</button>
-        </div>
+		<div class="form-actions">
+		  <!-- 누구나 볼 수 있는 목록 버튼만 -->
+		  <button type="button" class="btn btn-list" onclick="location.href='/board'">목록</button>
+		  
+		  <!-- 작성자 본인 또는 관리자일 때만 수정/삭제 버튼 표시 -->
+		  <c:if test="${sessionScope.isAdmin or sessionScope.loginDisplayName eq board.writer}">
+		    <button type="button" class="btn btn-edit" onclick="location.href='/board/edit/${board.id}'">수정</button>
+		    <button type="button" class="btn btn-delete"
+		            onclick="if(confirm('삭제하시겠습니까?')) location.href='/board/delete/${board.id}'">삭제</button>
+		  </c:if>
+		</div>
       </form>
     </div>
   </section>
