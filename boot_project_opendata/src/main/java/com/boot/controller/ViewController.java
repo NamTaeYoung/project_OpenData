@@ -63,29 +63,6 @@ public class ViewController {
         return (flag == 1) ? "Y" : "N";
     }
     
-    // 게시판 목록
-    @GetMapping("/board")
-    public String board() {
-        return "board";
-    }
-    
-    // 글쓰기 페이지 (로그인 필요)
-    @GetMapping("/board/write")
-    public String boardWrite(HttpSession session) {
-        // 로그인 체크
-        String loginDisplayName = (String) session.getAttribute("loginDisplayName");
-        if (loginDisplayName == null || loginDisplayName.isEmpty()) {
-            // 로그인 안되어 있으면 로그인 페이지로 리다이렉트
-            try {
-                String message = URLEncoder.encode("로그인 후 이용 가능합니다", StandardCharsets.UTF_8.toString());
-                return "redirect:/login?message=" + message;
-            } catch (Exception e) {
-                return "redirect:/login";
-            }
-        }
-        return "boardWrite";
-    }
-    
     // 마이페이지
     @GetMapping("/mypage")
     public String mypage() {
@@ -140,11 +117,6 @@ public class ViewController {
     	return "admin/adminMain";
     }
     
-    // 게시판 목록
-    @GetMapping("/boardManagement")
-    public String boardManagement() {
-        return "admin/boardManagement";
-    }
     // 공지사항 목록
     @GetMapping("/noticeMangement")
     public String noticeMangement() {
@@ -155,11 +127,6 @@ public class ViewController {
     public String qnaMangement() {
     	return "admin/qnaMangement";
     }
-    // 게시판 상세 (나중에 구현)
-     @GetMapping("/board/{id}")
-     public String boardDetail(@PathVariable Long id, Model model) {
-         return "boardDetail";
-     }
     
     // 공지사항 상세 (나중에 구현)
     // @GetMapping("/notice/{id}")
