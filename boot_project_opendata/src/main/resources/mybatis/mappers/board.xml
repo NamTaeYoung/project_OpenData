@@ -14,12 +14,11 @@
     <result column="board_content" property="boardContent"/>
     <result column="board_date"    property="boardDate"/>
     <result column="board_hit"     property="boardHit"/>
-    <result column="board_image"   property="boardImage"/>
   </resultMap>
 
   <sql id="columns">
     board_no, user_id, board_title, board_content,
-    board_date, board_hit, board_image
+    board_date, board_hit
   </sql>
 
   <!-- 목록(페이징) : Oracle 12c+ -->
@@ -29,7 +28,7 @@
         SELECT ROWNUM rn, t.*
         FROM (
             SELECT b.board_no, b.user_id, u.user_nickname, b.board_title, b.board_content,
-                   b.board_date, b.board_hit, b.board_image
+                   b.board_date, b.board_hit
             FROM post_board b
             LEFT JOIN users u ON b.user_id = u.user_id
             ORDER BY b.board_no DESC
@@ -47,7 +46,7 @@
 
   <select id="selectOne" parameterType="long" resultMap="BoardMap">
   SELECT b.board_no, b.user_id, u.user_nickname, b.board_title, b.board_content,
-         b.board_date, b.board_hit, b.board_image
+         b.board_date, b.board_hit
   FROM post_board b
   LEFT JOIN users u ON b.user_id = u.user_id
   WHERE b.board_no = #{boardNo}
@@ -61,16 +60,16 @@
       SELECT board_seq.NEXTVAL FROM dual
     </selectKey>
     INSERT INTO post_board (
-      board_no, user_id, board_title, board_content, board_date, board_hit, board_image
+      board_no, user_id, board_title, board_content, board_date, board_hit
     ) VALUES (
-      #{boardNo}, #{userId}, #{boardTitle}, #{boardContent}, SYSTIMESTAMP, 0, #{boardImage}
+      #{boardNo}, #{userId}, #{boardTitle}, #{boardContent}, SYSTIMESTAMP, 0
     )
   </insert>
 
   <!-- INSERT: 시퀀스 없이 외부에서 boardNo를 주입할 때 사용하는 대안
   <insert id="insert" parameterType="com.boot.dto.BoardDTO">
     INSERT INTO post_board (
-      board_no, user_id, board_title, board_content, board_date, board_hit, board_image
+      board_no, user_id, board_title, board_content, board_date, board_hit
     ) VALUES (
       #{boardNo}, #{userId}, #{boardTitle}, #{boardContent}, SYSTIMESTAMP, 0, #{boardImage}
     )
@@ -81,7 +80,6 @@
     UPDATE post_board
     SET board_title   = #{boardTitle},
         board_content = #{boardContent},
-        board_image   = #{boardImage}
     WHERE board_no    = #{boardNo}
   </update>
 
@@ -134,7 +132,7 @@
     SELECT ROWNUM rn, t.*
     FROM (
       SELECT b.board_no, b.user_id, u.user_nickname, b.board_title, b.board_content,
-             b.board_date, b.board_hit, b.board_image
+             b.board_date, b.board_hit
       FROM post_board b
       LEFT JOIN users u ON b.user_id = u.user_id
 ]]>
