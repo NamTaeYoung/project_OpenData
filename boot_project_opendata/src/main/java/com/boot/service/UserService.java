@@ -15,9 +15,9 @@ public interface UserService {
     // 마이페이지 조회 
     Map<String, Object> getUser(String userId);
 
-//    // 마이페이지 수정 
-//    int updateUser(Map<String, String> param);
-//
+    // 마이페이지 수정 
+    int updateUser(Map<String, String> param);
+
 //    // 회원 탈퇴
 //    int withdraw(Map<String, String> param);
     
@@ -56,4 +56,5 @@ public interface UserService {
     
     // 토큰으로 비밀번호 업데이트
     int updatePasswordByToken(Map<String, String> param);
+
 }
