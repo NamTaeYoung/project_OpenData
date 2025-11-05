@@ -1,0 +1,86 @@
+-- ===== 1) 기존 객체 정리 =====
+BEGIN EXECUTE IMMEDIATE 'DROP TABLE post_board_attach CASCADE CONSTRAINTS PURGE'; EXCEPTION WHEN OTHERS THEN NULL; END;
+/
+BEGIN EXECUTE IMMEDIATE 'DROP TABLE post_board CASCADE CONSTRAINTS PURGE'; EXCEPTION WHEN OTHERS THEN NULL; END;
+/
+BEGIN EXECUTE IMMEDIATE 'DROP SEQUENCE POST_BOARD_SEQ'; EXCEPTION WHEN OTHERS THEN NULL; END;
+/
+BEGIN EXECUTE IMMEDIATE 'DROP SEQUENCE POST_BOARD_ATTACH_SEQ'; EXCEPTION WHEN OTHERS THEN NULL; END;
+/
+
+-- ===== 2) 게시글 테이블 =====
+CREATE TABLE post_board (
+  board_no      NUMBER        PRIMARY KEY,
+  user_id       VARCHAR2(60)  NOT NULL,
+  board_title   VARCHAR2(100) NOT NULL,
+  board_content CLOB          NOT NULL,         -- 본문은 CLOB 권장
+  board_date    TIMESTAMP(6)  DEFAULT SYSTIMESTAMP NOT NULL,
+  board_hit     NUMBER        DEFAULT 0 NOT NULL
+);
+
+-- PK 시퀀스
+CREATE SEQUENCE POST_BOARD_SEQ START WITH 1 INCREMENT BY 1 NOCACHE;
+
+-- 조회성능 인덱스(옵션)
+CREATE INDEX idx_post_board_date ON post_board(board_date);
+CREATE INDEX idx_post_board_user ON post_board(user_id);
+
+-- ===== 3) 첨부/이미지 테이블 =====
+CREATE TABLE post_board_attach (
+  attach_no   NUMBER         PRIMARY KEY,
+  board_no    NUMBER         NOT NULL,
+  file_name   VARCHAR2(300)  NOT NULL,
+  file_path   VARCHAR2(300),
+  uuid        VARCHAR2(100),
+  is_image    CHAR(1)        DEFAULT 'Y',     -- 'Y' or 'N'
+  thumb_path  VARCHAR2(300),
+  sort_order  NUMBER         DEFAULT 0        -- 0 = 대표, 이후 1,2,...
+);
+
+-- PK 시퀀스
+CREATE SEQUENCE POST_BOARD_ATTACH_SEQ START WITH 1 INCREMENT BY 1 NOCACHE;
+
+-- FK (게시글 삭제 시 첨부도 같이 삭제)
+ALTER TABLE post_board_attach
+  ADD CONSTRAINT fk_pba_board
+  FOREIGN KEY (board_no)
+  REFERENCES post_board(board_no)
+  ON DELETE CASCADE;
+
+-- is_image 값 제한
+ALTER TABLE post_board_attach
+  ADD CONSTRAINT chk_pba_is_image CHECK (is_image IN ('Y', 'N'));
+
+-- 목록/대표 조회 성능 인덱스
+CREATE INDEX idx_pba_board_primary
+  ON post_board_attach(board_no, sort_order, attach_no);
+
+-- (옵션) 글마다 대표(sort_order=0)는 1개만 허용
+CREATE UNIQUE INDEX uidx_pba_one_primary
+  ON post_board_attach (board_no, DECODE(sort_order, 0, 0, NULL));
+  
+--게시판 목록 시퀀스 생성
+CREATE SEQUENCE POST_BOARD_SEQ START WITH 1 INCREMENT BY 1 NOCACHE;
+BEGIN
+  FOR i IN 1..50 LOOP
+    INSERT INTO post_board (
+      board_no,
+      user_id,
+      board_title,
+      board_content,
+      board_date,
+      board_hit
+    ) VALUES (
+      POST_BOARD_SEQ.NEXTVAL,
+      'user01',  -- 실제 user_id로 변경
+      '테스트 제목 ' || i,
+      '테스트 내용입니다 (' || i || ')',
+      SYSTIMESTAMP,
+      0
+    );
+  END LOOP;
+  COMMIT;
+END;
+/
+
+COMMIT;
