@@ -1,0 +1,20 @@
+CREATE TABLE opendata_users (
+    user_id             VARCHAR2(60) PRIMARY KEY,
+    user_pw             VARCHAR2(100) NOT NULL,
+    user_email          VARCHAR2(100) NOT NULL,
+    user_email_chk      CHAR(1) DEFAULT 'N' NOT NULL,
+    user_phone_num      VARCHAR2(20) NOT NULL,
+    user_post_num       VARCHAR2(10),
+    user_address        VARCHAR2(200),
+    user_detail_address VARCHAR2(200),
+    user_name           VARCHAR2(50) NOT NULL, 
+    user_nickname       VARCHAR2(20),
+    user_pwd_reset      VARCHAR2(100),
+    login_fail_count    NUMBER(1) DEFAULT 0,
+    last_fail_time      DATE,
+    reg_date            DATE DEFAULT SYSDATE,
+    last_login_date     DATE,
+    login_type          VARCHAR2(20) DEFAULT 'LOCAL',
+    social_id           VARCHAR2(100),
+    CONSTRAINT uk_opendata_users_email UNIQUE (user_email) 
+);
