@@ -267,6 +267,10 @@
       color: var(--text);
       font-size: 14px;
       transition: all .2s ease;
+     
+     background-color: #f8f9fa;
+     border: 1px solid #ddd;
+     
     }
     .pagination a:hover {
       background: var(--section-bg);
@@ -276,6 +280,19 @@
       background: var(--brand);
       color: #fff;
     }
+   
+   .pagination a {
+     cursor: pointer;
+   }
+
+   .pagination span {
+     cursor: default;
+   }
+
+   .pagination a:hover {
+     background: #D3D3D3;
+	 color: #000;
+   }
 
     /* 푸터 */
     .footer { background:#000; color:#fff; padding:60px 0 30px; }
