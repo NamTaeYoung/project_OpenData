@@ -66,8 +66,7 @@ $(function(){
             <div class="nav-right">
                 <a href="<c:url value='/login'/>">로그인</a>
                 <a href="<c:url value='/register'/>" aria-current="page" style="font-weight:700; color:var(--brand)">회원가입</a>
-                <a href="#">관리자정보</a>
-            </div>
+				<a href="<c:url value='/admin/login'/>">관리자정보</a>            </div>
         </nav>
     </header>
 

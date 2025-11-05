@@ -24,7 +24,7 @@
       <div class="nav-right">
         <a href="<c:url value='/login'/>" aria-current="page" style="font-weight:700; color:var(--brand)">로그인</a>
         <a href="<c:url value='/register'/>">회원가입</a>
-        <a href="#">관리자정보</a>
+        <a href="<c:url value='/admin/login'/>">관리자정보</a>
       </div>
     </nav>
   </header>
@@ -65,19 +65,21 @@
 		  <!-- 소셜 로그인 버튼 묶음 -->
 		  <div style="display:flex; gap:15px; justify-content:center; margin-top:15px;">
 		    <!-- 카카오 로그인 -->
-		    <a href="https://kauth.kakao.com/oauth/authorize?client_id=a7dbe8639d860d6cc00ef0b2a62cab2a&redirect_uri=http://localhost:8484/oauth/kakao&response_type=code&prompt=login">
+		    <a href="/oauth/kakao/login">
 		      <img src="/img/kakao_logo.png"
 		           alt="카카오 로그인"
 		           style="width:50px; height:50px; cursor:pointer; border-radius:50%;">
 		    </a>
+
 		    <!-- 네이버 로그인 -->
-		    <a href="https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=fNjqJokPMPh1YwLl6Ta4&redirect_uri=http://localhost:8484/oauth/naver&state=xcQyVexGqe&auth_type=reprompt">
+		    <a href="/oauth/naver/login">
 		      <img src="/img/naver_logo.png"
 		           alt="네이버 로그인"
 		           style="width:50px; height:50px; cursor:pointer; border-radius:50%;">
 		    </a>
+
 		    <!-- 구글 로그인 -->
-		    <a href="https://accounts.google.com/o/oauth2/v2/auth?client_id=529885044322-4irpm5qu15b1vms505lfgqer021gfe0o.apps.googleusercontent.com&redirect_uri=http://localhost:8484/oauth/google&response_type=code&scope=email%20profile&access_type=offline&prompt=consent">
+		    <a href="/oauth/google/login">
 		      <img src="/img/google_logo.png"
 		           alt="구글 로그인"
 		           style="width:50px; height:50px; cursor:pointer; border-radius:50%;">

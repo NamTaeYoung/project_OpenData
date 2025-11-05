@@ -26,10 +26,9 @@ public class LoginController {
     @Autowired
     private UserService userService;
     
-    // 로그인 페이지
+    // 회원 로그인 페이지
     @GetMapping("/login")
     public String loginPage(@RequestParam(value = "message", required = false) String message,
-                           @RequestParam(value = "admin", required = false) String admin,
                            Model model) {
         if (message != null && !message.isEmpty()) {
             try {
@@ -39,42 +38,16 @@ public class LoginController {
                 model.addAttribute("message", message);
             }
         }
-        if (admin != null && admin.equals("true")) {
-            model.addAttribute("adminLogin", true);
-        }
         return "login";
     }
     
-    // 로그인 처리 (일반 사용자 + 관리자)
+    // 회원 로그인 처리
     @PostMapping("/login_yn")
-    public String login(@RequestParam("user_id") String username,
-                       @RequestParam("user_pw") String password,
-                       @RequestParam(value = "admin", required = false) String admin,
-                       HttpSession session,
-                       Model model) {
+    public String userLogin(@RequestParam("user_id") String username,
+                           @RequestParam("user_pw") String password,
+                           HttpSession session,
+                           Model model) {
         
-        // 관리자 로그인 체크
-        if (admin != null && admin.equals("true")) {
-            try {
-                Admin adminUser = adminService.authenticate(username, password);
-                if (adminUser != null) {
-                    session.setAttribute("loginDisplayName", adminUser.getName());
-                    session.setAttribute("userId", adminUser.getId());
-                    session.setAttribute("isAdmin", true);
-                    session.setAttribute("role", "ADMIN");
-                    return "redirect:/main";
-                } else {
-                    model.addAttribute("login_err", "아이디 또는 비밀번호가 일치하지 않습니다.");
-                    return "login";
-                }
-            } catch (Exception e) {
-                model.addAttribute("login_err", "로그인 처리 중 오류가 발생했습니다. 관리자에게 문의하세요.");
-                e.printStackTrace();
-                return "login";
-            }
-        }
-        
-        // 일반 사용자 로그인
         Map<String, String> param = new HashMap<>();
         param.put("user_id", username);
         param.put("user_pw", password);
@@ -129,7 +102,48 @@ public class LoginController {
         }
     }
     
-    // 로그아웃 처리
+    // 관리자 로그인 페이지
+    @GetMapping("/admin/login")
+    public String adminLoginPage(@RequestParam(value = "message", required = false) String message,
+                                 Model model) {
+        if (message != null && !message.isEmpty()) {
+            try {
+                String decodedMessage = URLDecoder.decode(message, StandardCharsets.UTF_8.toString());
+                model.addAttribute("message", decodedMessage);
+            } catch (Exception e) {
+                model.addAttribute("message", message);
+            }
+        }
+        return "adminLogin"; // 관리자 전용 로그인 JSP 페이지
+    }
+    
+    // 관리자 로그인 처리
+    @PostMapping("/admin/login_yn")
+    public String adminLogin(@RequestParam("username") String username,
+                             @RequestParam("password") String password,
+                             HttpSession session,
+                             Model model) {
+        
+        try {
+            Admin adminUser = adminService.authenticate(username, password);
+            if (adminUser != null) {
+                session.setAttribute("loginDisplayName", adminUser.getName());
+                session.setAttribute("userId", adminUser.getId());
+                session.setAttribute("isAdmin", true);
+                session.setAttribute("role", "ADMIN");
+                return "redirect:/adminMain";
+            } else {
+                model.addAttribute("login_err", "아이디 또는 비밀번호가 일치하지 않습니다.");
+                return "adminLogin";
+            }
+        } catch (Exception e) {
+            model.addAttribute("login_err", "로그인 처리 중 오류가 발생했습니다. 관리자에게 문의하세요.");
+            e.printStackTrace();
+            return "adminLogin";
+        }
+    }
+    
+    // 로그아웃 처리 (회원/관리자 공통)
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();

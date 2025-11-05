@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -132,11 +133,33 @@ public class ViewController {
         return "qnaWrite";
     }
     
+    
+    // 관리자 메인화면
+    @GetMapping("/adminMain")
+    public String adminMain() {
+    	return "admin/adminMain";
+    }
+    
+    // 게시판 목록
+    @GetMapping("/boardManagement")
+    public String boardManagement() {
+        return "admin/boardManagement";
+    }
+    // 공지사항 목록
+    @GetMapping("/noticeMangement")
+    public String noticeMangement() {
+    	return "admin/noticeMangement";
+    }
+    // QnA 목록
+    @GetMapping("/qnaMangement")
+    public String qnaMangement() {
+    	return "admin/qnaMangement";
+    }
     // 게시판 상세 (나중에 구현)
-    // @GetMapping("/board/{id}")
-    // public String boardDetail(@PathVariable Long id, Model model) {
-    //     return "boardDetail";
-    // }
+     @GetMapping("/board/{id}")
+     public String boardDetail(@PathVariable Long id, Model model) {
+         return "boardDetail";
+     }
     
     // 공지사항 상세 (나중에 구현)
     // @GetMapping("/notice/{id}")

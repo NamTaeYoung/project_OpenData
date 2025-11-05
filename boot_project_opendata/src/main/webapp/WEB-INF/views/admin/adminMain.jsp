@@ -20,7 +20,7 @@
   <!-- 헤더 & 네비 -->
   <header>
     <nav class="nav" aria-label="주요 메뉴">
-      <a href="/main" class="brand">대기질 정보</a>
+      <a href="/adminMain" class="brand">대기질 정보</a>
       <!-- 로그인 전/후 분기 -->
       <div class="nav-right">
         <c:choose>
@@ -28,7 +28,7 @@
           <c:when test="${empty sessionScope.loginDisplayName}">
             <a href="<c:url value='/login'/>">로그인</a>
             <a href="<c:url value='/register'/>">회원가입</a>
-			<a href="<c:url value='/admin/login'/>">관리자정보</a>
+            <a href="<c:url value='/login?admin=true'/>">관리자정보</a>
           </c:when>
           <%-- 로그인 후 --%>
           <c:otherwise>
@@ -45,10 +45,10 @@
   <div class="promo" role="note" aria-label="프로모션">
     <div class="promo-content">
       <div class="promo-nav">
-        <a href="/main" class="nav-category">상세정보</a>
-        <a href="/board" class="nav-board">게시판</a>
-        <a href="/notice" class="nav-notice">공지사항</a>
-        <a href="/qna" class="nav-qna">QnA</a>
+        <a href="/adminMain" class="nav-category">상세정보</a>
+        <a href="/memberManagement" class="nav-board">회원관리</a>
+        <a href="/boardManagement" class="nav-notice">게시판관리</a>
+        <a href="/qna" class="nav-qna">지역관리</a>
       </div>
     </div>
   </div>
