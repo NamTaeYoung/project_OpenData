@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.boot.dao.StationDAO">
+
+  <resultMap id="StationMap" type="com.boot.dto.StationDTO">
+    <id     column="station_id"  property="stationId"/>
+    <result column="station_name" property="stationName"/>
+    <result column="addr"         property="addr"/>
+    <result column="tm_x"         property="tmX"/>
+    <result column="tm_y"         property="tmY"/>
+    <result column="lon_wgs84"    property="lonWgs84"/>
+    <result column="lat_wgs84"    property="latWgs84"/>
+    <result column="sido_name"    property="sidoName"/>
+    <result column="sgg_name"     property="sggName"/>
+    <result column="umd_name"     property="umdName"/>
+  </resultMap>
+
+  <select id="findByName" parameterType="string" resultMap="StationMap">
+    SELECT * FROM aq_station WHERE station_name = #{stationName}
+  </select>
+
+  <!-- Oracle: 시퀀스로 PK 할당 -->
+  <insert id="insertStation" parameterType="com.boot.dto.StationDTO">
+    <selectKey keyProperty="stationId" resultType="long" order="BEFORE">
+      SELECT aq_station_seq.NEXTVAL FROM dual
+    </selectKey>
+    INSERT INTO aq_station (
+      station_id, station_name, addr, tm_x, tm_y, lon_wgs84, lat_wgs84, sido_name, sgg_name, umd_name
+    ) VALUES (
+      #{stationId}, #{stationName}, #{addr}, #{tmX}, #{tmY}, #{lonWgs84}, #{latWgs84}, #{sidoName}, #{sggName}, #{umdName}
+    )
+  </insert>
+
+  <!-- 뷰포트(BBOX) 내 측정소 + 최신값(옵션) -->
+  <select id="selectStationsInBbox" resultType="com.boot.dto.StationListItem">
+    SELECT
+      s.station_id   AS stationId,
+      s.station_name AS name,
+      s.lat_wgs84    AS lat,
+      s.lon_wgs84    AS lon,
+      (SELECT CAST(pm10 AS NUMBER(10,0)) FROM aq_measurement m
+         WHERE m.station_id = s.station_id
+         ORDER BY m.data_time DESC FETCH FIRST 1 ROWS ONLY) AS pm10,
+      (SELECT CAST(pm25 AS NUMBER(10,0)) FROM aq_measurement m
+         WHERE m.station_id = s.station_id
+         ORDER BY m.data_time DESC FETCH FIRST 1 ROWS ONLY) AS pm25
+    FROM aq_station s
+    WHERE s.lat_wgs84 BETWEEN #{south} AND #{north}
+      AND s.lon_wgs84 BETWEEN #{west}  AND #{east}
+  </select>
+
+</mapper>
