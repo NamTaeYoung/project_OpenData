@@ -34,10 +34,10 @@ public class UserServicelmpl implements UserService {
     }
 
     /** 마이페이지 수정 */
-//    public int updateUser(Map<String, String> param) {
-//        return sqlSession.update(
-//            "com.boot.dao.UserDAO.updateUser", param);
-//    }
+    public int updateUser(Map<String, String> param) {
+        return sqlSession.update(
+            "com.boot.dao.UserDAO.updateUser", param);
+    }
     
     /** 회원가입 로직 */
     public int register(Map<String, String> param) {
