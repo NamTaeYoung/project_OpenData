@@ -1,0 +1,42 @@
+-- 관리자 테이블 생성
+CREATE TABLE admin (
+    id NUMBER PRIMARY KEY,
+    username VARCHAR2(50) NOT NULL UNIQUE,
+    password VARCHAR2(255) NOT NULL,
+    name VARCHAR2(50) NOT NULL,
+    email VARCHAR2(100),
+    is_active NUMBER(1) DEFAULT 1 NOT NULL,  -- 0: 비활성, 1: 활성
+    created_at DATE DEFAULT SYSDATE,
+    updated_at DATE DEFAULT SYSDATE,
+    CONSTRAINT chk_admin_active CHECK (is_active IN (0, 1))
+);
+
+-- 시퀀스 생성
+CREATE SEQUENCE admin_seq
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE
+    NOCYCLE;
+
+-- 시퀀스를 사용하는 트리거 생성 (자동 증가)
+CREATE OR REPLACE TRIGGER admin_id_trigger
+    BEFORE INSERT ON admin
+    FOR EACH ROW
+BEGIN
+    IF :NEW.id IS NULL THEN
+        SELECT admin_seq.NEXTVAL INTO :NEW.id FROM DUAL;
+    END IF;
+END;
+/
+
+-- 관리자 계정 샘플 데이터 추가
+-- 비밀번호는 암호화된 값으로 변경 필요
+-- 이메일 제외하고 INSERT
+INSERT INTO admin (id, username, password, name, is_active)
+VALUES (admin_seq.NEXTVAL, 'nty0924', '1111', '관리자', 1);
+
+
+COMMIT;
+
+-- 관리자 테이블 조회
+SELECT * FROM admin;
