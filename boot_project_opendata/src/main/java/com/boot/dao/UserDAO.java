@@ -15,7 +15,7 @@ public interface UserDAO {
 	// 회원가입 (새 사용자 추가)
 	public void insertUser(String user_id, String user_pw, String user_name, String user_email, String user_phone_num);
 	// 기타 필요한 메서드 예시
-//	public void updateUser(UserDTO user);
+	public void updateUser(UserDTO user);
 //	public void deleteUser(String user_id);
     // 아이디 중복 체크
     public int checkId(String user_id);
