@@ -41,7 +41,7 @@
     <div class="promo-content">
       <div class="promo-nav">
         <a href="/main" class="nav-category">상세정보</a>
-        <a href="/board" class="nav-board">게시판</a>
+        <a href="/board/list" class="nav-board">게시판</a>
         <a href="/notice" class="nav-notice">공지사항</a>
         <a href="/qna" class="nav-qna">QnA</a>
       </div>
