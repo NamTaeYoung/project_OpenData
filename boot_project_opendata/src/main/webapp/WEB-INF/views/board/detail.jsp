@@ -97,7 +97,7 @@
 
         <!-- 버튼 -->
         <div class="form-actions">
-          <button type="button" class="btn btn-list" onclick="location.href='/board/list.do'">목록</button>
+          <button type="button" class="btn btn-list" onclick="location.href='/board/list'">목록</button>
           <button type="button" class="btn btn-edit" onclick="location.href='/board/edit/${board.boardNo}'">수정</button>
           <button type="button" class="btn btn-delete" onclick="if(confirm('삭제하시겠습니까?')) location.href='/board/delete/${board.boardNo}'">삭제</button>
         </div>
