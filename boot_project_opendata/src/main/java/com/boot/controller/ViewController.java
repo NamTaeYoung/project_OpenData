@@ -10,11 +10,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.boot.service.UserService;
+import com.boot.util.AirQualityCalculator;
+import com.boot.util.ExcelReader;
+import com.boot.dto.StationDTO;
 import com.boot.dto.UserDTO;
 
 import javax.servlet.http.HttpSession;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -23,6 +27,12 @@ public class ViewController {
     @Autowired
     private UserService userService;
     
+    @Autowired
+    private ExcelReader excelReader;
+    
+    @Autowired
+    private AirQualityCalculator airQualityCalculator;
+    
     // 메인 페이지
     @GetMapping("/")
     public String main() {
@@ -30,7 +40,11 @@ public class ViewController {
     }
     
     @GetMapping("/main")
-    public String mainPage() {
+    public String mainPage(Model model) {
+    	List<StationDTO> stations = excelReader.readStations();
+        Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
+
+        model.addAttribute("cityAverages", cityAverages.values());
         return "main";
     }
     
@@ -205,7 +219,11 @@ public class ViewController {
     
     // 관리자 메인화면
     @GetMapping("/adminMain")
-    public String adminMain(HttpSession session) {
+    public String adminMain(HttpSession session,Model model) {
+    	List<StationDTO> stations = excelReader.readStations();
+        Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
+
+        model.addAttribute("cityAverages", cityAverages.values());
     	// 관리자 권한 체크
     	Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
     	if (isAdmin == null || !isAdmin) {
