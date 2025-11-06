@@ -5,7 +5,8 @@ import java.util.Map;
 import com.boot.dto.UserDTO;
 
 public interface UserService {
-
+	public String getNicknameByUserId(String userId);
+	
 	// 로그인 검증
     boolean loginYn(Map<String, String> param);
 
