@@ -1,9 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.boot.dao.BoardDAO">
 
+  <!-- 게시글 등록: 첨부 이미지 없음, 내용만 저장 -->
+  <insert id="insert" parameterType="com.boot.dto.BoardDTO">
+    <selectKey keyProperty="boardNo" resultType="long" order="BEFORE">
+      SELECT POST_BOARD_SEQ.NEXTVAL FROM dual
+    </selectKey>
+    INSERT INTO post_board
+      (board_no, user_id, board_title, board_content, board_date, board_hit)
+    VALUES
+      (#{boardNo},
+       #{userId},
+       #{boardTitle},
+       #{boardContent},
+       SYSTIMESTAMP,
+       0)
+  </insert>
+	<select id="find" parameterType="long" resultType="com.boot.dto.BoardDTO">
+	  SELECT
+	    board_no    AS boardNo,
+	    user_id     AS userId,
+	    board_title AS boardTitle,
+	    board_content AS boardContent,
+	    board_date  AS boardDate,
+	    board_hit   AS boardHit
+	  FROM post_board
+	  WHERE board_no = #{boardNo}
+	</select>
+  <!-- 시퀀스 현재값 (필요시 사용) -->
+  <select id="selectCurrBoardNo" resultType="long">
+    SELECT POST_BOARD_SEQ.CURRVAL FROM dual
+  </select>
+  
   <!-- 카멜케이스 자동매핑을 쓰지 않는다면 resultMap으로 명시 매핑 -->
   <!-- mapUnderscoreToCamelCase=true면 resultType만으로도 매핑됨 -->
   <resultMap id="BoardMap" type="com.boot.dto.BoardDTO">
@@ -52,19 +84,18 @@
   WHERE b.board_no = #{boardNo}
 </select>
 
-  <!-- INSERT: 시퀀스 사용하는 경우(권장) -->
-  <!-- 시퀀스 이름은 예시입니다. 실제 생성한 이름으로 교체하세요. -->
+
   <!-- CREATE SEQUENCE board_seq START WITH 1 INCREMENT BY 1; -->
-  <insert id="insert" parameterType="com.boot.dto.BoardDTO">
-    <selectKey resultType="long" keyProperty="boardNo" order="BEFORE">
-      SELECT board_seq.NEXTVAL FROM dual
-    </selectKey>
-    INSERT INTO post_board (
-      board_no, user_id, board_title, board_content, board_date, board_hit
-    ) VALUES (
-      #{boardNo}, #{userId}, #{boardTitle}, #{boardContent}, SYSTIMESTAMP, 0
-    )
-  </insert>
+<!--  <insert id="insert" parameterType="com.boot.dto.BoardDTO">-->
+<!--    <selectKey resultType="long" keyProperty="boardNo" order="BEFORE">-->
+<!--      SELECT board_seq.NEXTVAL FROM dual-->
+<!--    </selectKey>-->
+<!--    INSERT INTO post_board (-->
+<!--      board_no, user_id, board_title, board_content, board_date, board_hit-->
+<!--    ) VALUES (-->
+<!--      #{boardNo}, #{userId}, #{boardTitle}, #{boardContent}, SYSTIMESTAMP, 0-->
+<!--    )-->
+<!--  </insert>-->
 
   <!-- INSERT: 시퀀스 없이 외부에서 boardNo를 주입할 때 사용하는 대안
   <insert id="insert" parameterType="com.boot.dto.BoardDTO">
@@ -125,7 +156,6 @@
 </sql>
 
 
-<!-- 🔎 검색 + 페이징 -->
 <select id="searchPage" resultMap="BoardMap">
 <![CDATA[
   SELECT * FROM (
