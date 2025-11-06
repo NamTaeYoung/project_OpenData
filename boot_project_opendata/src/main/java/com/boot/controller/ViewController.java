@@ -78,11 +78,6 @@ public class ViewController {
         return (flag == 1) ? "Y" : "N";
     }
 
-    // 마이페이지
-    @GetMapping("/mypage")
-    public String mypage() {
-        return "mypage";
-    }
     
     // 회원 정보 수정 페이지
     @GetMapping("/mypage/edit")
@@ -245,25 +240,25 @@ public class ViewController {
     }
     
     // 공지사항 목록
-    @GetMapping("/noticeManagement")
-    public String noticeManagement(HttpSession session) {
+    @GetMapping("/noticeMangement")
+    public String noticeMangement(HttpSession session) {
     	// 관리자 권한 체크
     	Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
     	if (isAdmin == null || !isAdmin) {
     		return "redirect:/admin/login";
     	}
-    	return "admin/noticeManagement";
+    	return "admin/noticeMangement";
     }
     
     // QnA 목록
-    @GetMapping("/qnaManagement")
-    public String qnaManagement(HttpSession session) {
+    @GetMapping("/qnaMangement")
+    public String qnaMangement(HttpSession session) {
     	// 관리자 권한 체크
     	Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
     	if (isAdmin == null || !isAdmin) {
     		return "redirect:/admin/login";
     	}
-    	return "admin/qnaManagement";
+    	return "admin/qnaMangement";
     }
     
     // 게시판 상세 (나중에 구현)
