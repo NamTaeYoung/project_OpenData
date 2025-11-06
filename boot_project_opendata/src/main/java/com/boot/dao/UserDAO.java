@@ -8,6 +8,8 @@ import java.util.Map;
 import com.boot.dto.UserDTO;
 
 public interface UserDAO {
+	String findNicknameByUserId(@Param("userId") String userId);
+	
 	public ArrayList<UserDTO> loginYn(HashMap<String, String> param);
 	public void register(HashMap<String, String> param);
 	// 특정 아이디로 사용자 조회 (로그인용 등)
