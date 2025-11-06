@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
@@ -59,7 +60,7 @@
           </c:when>
           <%-- 로그인 후 --%>
           <c:otherwise>
-            <a href="<c:url value='/mypage'/>">마이페이지</a>
+			<a href="<c:url value='/adminMain'/>">관리자메인</a>
             <a href="<c:url value='/logout'/>">로그아웃</a>
             <span class="user-name">${sessionScope.loginDisplayName}님</span>
           </c:otherwise>
@@ -99,83 +100,100 @@
 		</div>
 	  </div>
 
-      <div class="board-table-wrapper">
-        <table class="board-table">
-          <thead>
-            <tr>
-              <th>번호</th>
-              <th>제목</th>
-              <th>작성자</th>
-              <th>작성일</th>
-              <th>조회수</th>
-            </tr>
-          </thead>
-          <tbody>
-            <%-- 백엔드 연동 시: <c:forEach> 태그로 데이터 표시 
-            <c:forEach var="board" items="${boardList}">
-              <tr>
-                <td>${board.id}</td>
-                <td>
-                  <a href="/board/${board.id}">
-                    ${board.title}
-                    <c:if test="${not empty board.fileName}">
-                      <span class="file-icon">📎</span>
-                    </c:if>
-                  </a>
-                </td>
-                <td>${board.writer}</td>
-                <td>${board.regDate}</td>
-                <td>${board.viewCount}</td>
-              </tr>
-            </c:forEach>
-            --%>
-            <!-- 데이터가 없을 때 -->
-            <tr>
-              <td colspan="5" class="empty-row">
-                등록된 게시글이 없습니다.
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+	  <div class="board-table-wrapper">
+	    <table class="board-table">
+	      <thead>
+	        <tr>
+	          <th>번호</th>
+	          <th>제목</th>
+	          <th>작성자</th>
+	          <th>작성일</th>
+	          <th>조회수</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	        <c:choose>
+	          <c:when test="${empty boardList}">
+	            <tr>
+	              <td colspan="5">등록된 게시물이 없습니다.</td>
+	            </tr>
+	          </c:when>
+	          <c:otherwise>
+	            <c:forEach var="board" items="${boardList}">
+	              <tr>
+	                <td>${board.boardNo}</td>
+	                <td>
+	                  <!-- 상세: 조회수 +1은 컨트롤러에서 처리 X (관리자용은 증가 안 함) -->
+	                  <a href="${pageContext.request.contextPath}/adminDetail?boardNo=${board.boardNo}">
+	                    <c:out value="${board.boardTitle}" />
+	                  </a>
+	                </td>
+	                <td>${board.userNickname}</td>
+	                <td>${board.formattedDate}</td>
+	                <td>${board.boardHit}</td>
+	              </tr>
+	            </c:forEach>
+	          </c:otherwise>
+	        </c:choose>
+	      </tbody>
+	    </table>
+	  </div>
 
-      <!-- 검색 영역 -->
-      <div class="board-search">
-        <form method="get" action="/board" id="searchForm">
-          <select name="searchType" style="padding: 12px; border: 2px solid #eee; border-radius: 12px; font-size: 14px; margin-right: 8px;">
-            <option value="title">제목</option>
-            <option value="content">내용</option>
-            <option value="writer">작성자</option>
-          </select>
-          <input type="text" name="keyword" class="search-input" placeholder="검색어를 입력하세요" value="${param.keyword}">
-          <button type="submit" class="search-btn">검색</button>
-        </form>
-      </div>
+	  <!-- 검색 영역 -->
+	  <div class="board-search">
+	    <form method="get" action="${pageContext.request.contextPath}/boardManagement" id="searchForm">
+	      <select name="type" style="padding: 12px; border: 2px solid #eee; border-radius: 12px; font-size: 14px; margin-right: 8px;">
+	        <option value="tc" ${type == 'tc' ? 'selected' : ''}>제목+내용</option>
+	        <option value="title" ${type == 'title' ? 'selected' : ''}>제목</option>
+	        <option value="content" ${type == 'content' ? 'selected' : ''}>내용</option>
+	        <option value="writer" ${type == 'writer' ? 'selected' : ''}>작성자</option>
+	      </select>
+	      <input type="text" name="keyword" class="search-input" placeholder="검색어를 입력하세요" value="${fn:escapeXml(keyword)}" />
+	      <input type="hidden" name="size" value="${size}" />
+	      <button type="submit" class="search-btn">검색</button>
+	    </form>
+	  </div>
 
-      <!-- 페이지네이션 -->
-      <div class="pagination">
-        <%-- 백엔드 연동 시: 페이지네이션 데이터 표시
-        <c:if test="${pageInfo.hasPrev}">
-          <a href="/board?page=${pageInfo.prevPage}">이전</a>
-        </c:if>
-        <c:forEach var="pageNum" begin="${pageInfo.startPage}" end="${pageInfo.endPage}">
-          <c:choose>
-            <c:when test="${pageNum == pageInfo.currentPage}">
-              <span class="active">${pageNum}</span>
-            </c:when>
-            <c:otherwise>
-              <a href="/board?page=${pageNum}">${pageNum}</a>
-            </c:otherwise>
-          </c:choose>
-        </c:forEach>
-        <c:if test="${pageInfo.hasNext}">
-          <a href="/board?page=${pageInfo.nextPage}">다음</a>
-        </c:if>
-        --%>
-        <span class="active">1</span>
-      </div>
-    </div>
-  </section>
+	  <!-- 페이지네이션 -->
+	  <div class="pagination">
+	    <c:if test="${startPage > 1}">
+	      <c:url var="prevUrl" value="/boardManagement">
+	        <c:param name="page" value="${startPage - 1}" />
+	        <c:param name="size" value="${size}" />
+	        <c:if test="${not empty keyword}">
+	          <c:param name="type" value="${type}" />
+	          <c:param name="keyword" value="${keyword}" />
+	        </c:if>
+	      </c:url>
+	      <a href="${pageContext.request.contextPath}${prevUrl}"><</a>
+	    </c:if>
+
+	    <c:forEach var="i" begin="${startPage}" end="${endPage}">
+	      <c:url var="pageUrl" value="/boardManagement">
+	        <c:param name="page" value="${i}" />
+	        <c:param name="size" value="${size}" />
+	        <c:if test="${not empty keyword}">
+	          <c:param name="type" value="${type}" />
+	          <c:param name="keyword" value="${keyword}" />
+	        </c:if>
+	      </c:url>
+	      <a href="${pageContext.request.contextPath}${pageUrl}" class="${i == page ? 'active' : ''}">${i}</a>
+	    </c:forEach>
+
+	    <c:if test="${endPage < pageCount}">
+	      <c:url var="nextUrl" value="/boardManagement">
+	        <c:param name="page" value="${endPage + 1}" />
+	        <c:param name="size" value="${size}" />
+	        <c:if test="${not empty keyword}">
+	          <c:param name="type" value="${type}" />
+	          <c:param name="keyword" value="${keyword}" />
+	        </c:if>
+	      </c:url>
+	      <a href="${pageContext.request.contextPath}${nextUrl}">></a>
+	    </c:if>
+	  </div>
+	  </div>
+	  </section>
 
   <!-- 푸터 -->
   <footer class="footer">
