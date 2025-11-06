@@ -229,16 +229,16 @@ public class ViewController {
     }
     
     // 게시판 목록
-    @GetMapping("/boardManagement")
-    public String boardManagement(HttpSession session) {
-    	// 관리자 권한 체크
-    	Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
-    	if (isAdmin == null || !isAdmin) {
-    		return "redirect:/admin/login";
-    	}
-        return "admin/boardManagement";
-    }
-    
+//    @GetMapping("/boardManagement")
+//    public String boardManagement(HttpSession session) {
+//    	// 관리자 권한 체크
+//    	Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
+//    	if (isAdmin == null || !isAdmin) {
+//    		return "redirect:/admin/login";
+//    	}
+//        return "admin/boardManagement";
+//    }
+//   
     // 공지사항 목록
     @GetMapping("/noticeManagement")
     public String noticeManagement(HttpSession session) {
