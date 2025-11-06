@@ -11,6 +11,38 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
   <!-- 외부 CSS -->
   <link rel="stylesheet" href="/css/board.css">
+  <!-- ✅ 게시판 선택창 전용 스타일 -->
+  <style>
+    .board-filter label {
+      font-size: 15px;
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .board-select {
+      padding: 6px 12px;
+      margin-left: 4px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background-color: #f9fafb;
+      color: #1e3a8a;
+      font-weight: 500;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .board-select:hover {
+      border-color: #94a3b8;
+    }
+
+    .board-select:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+    }
+  </style>
 </head>
 <body>
   <!-- 헤더 & 네비 -->
@@ -40,10 +72,10 @@
   <div class="promo" role="note" aria-label="프로모션">
     <div class="promo-content">
       <div class="promo-nav">
-        <a href="/adminMain" class="nav-category">상세정보</a>
-        <a href="/boardManagement" class="nav-board">게시판관리</a>
-        <a href="/noticeMangement" class="nav-notice">공지사항관리</a>
-        <a href="/qnaMangement" class="nav-qna">QnA관리</a>
+		<a href="/adminMain" class="nav-category">상세정보</a>
+		<a href="/memberManagement" class="nav-board">회원관리</a>
+		<a href="/boardManagement" class="nav-notice">게시판관리</a>
+		<a href="/qna" class="nav-qna">지역관리</a>
       </div>
     </div>
   </div>
@@ -52,8 +84,20 @@
   <section class="board-section">
     <div class="board-container">
       <div class="board-header">
-        <h1 class="board-title">게시판</h1>
-      </div>
+		<!-- ✅ 게시판 제목 + 선택창을 같은 줄로 배치 -->
+		<div style="display: inline-flex; align-items: center; gap: 8px;">
+		  <h1 class="board-title" style="margin: 0;">게시판</h1>
+	
+		  <div class="board-filter">
+		    <select id="boardType" name="boardType" class="board-select" onchange="moveToBoardPage(this.value)">
+		      <option value="">선택하세요</option>
+		      <option value="board">게시판 관리</option>
+		      <option value="notice">공지사항 관리</option>
+		      <option value="qna">Q&A 관리</option>
+		    </select>
+		  </div>
+		</div>
+	  </div>
 
       <div class="board-table-wrapper">
         <table class="board-table">
@@ -148,6 +192,18 @@
       </div>
     </div>
   </footer>
+  <script>
+    // ✅ 선택 시 해당 JSP 페이지로 이동
+	function moveToBoardPage(type) {
+	  if (type === "board") {
+	    location.href = "/boardManagement";
+	  } else if (type === "notice") {
+	    location.href = "/noticeManagement";
+	  } else if (type === "qna") {
+		location.href = "/qnaManagement";
+	  } 
+	}
+  </script>
 </body>
 </html>
 
