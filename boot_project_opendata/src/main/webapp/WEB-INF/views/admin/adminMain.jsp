@@ -118,108 +118,47 @@
 
     <!-- 주요 도시 대기질 섹션 -->
     <section class="cities-section">
-      <div class="cities-container">
-        <h2 class="section-title">주요 도시 대기질 현황</h2>
-        <div class="cities-grid">
-          <div class="city-card">
-            <div class="city-header">
-              <h3 class="city-name">서울</h3>
-              <span class="city-grade normal">보통</span>
-            </div>
-            <div class="city-info">
-              <div class="city-info-item">
-                <span class="city-info-label">미세먼지</span>
-                <span class="city-info-value">45 ㎍/㎥</span>
-              </div>
-              <div class="city-info-item">
-                <span class="city-info-label">초미세먼지</span>
-                <span class="city-info-value">25 ㎍/㎥</span>
-              </div>
-            </div>
-          </div>
-          <div class="city-card">
-            <div class="city-header">
-              <h3 class="city-name">부산</h3>
-              <span class="city-grade good">좋음</span>
-            </div>
-            <div class="city-info">
-              <div class="city-info-item">
-                <span class="city-info-label">미세먼지</span>
-                <span class="city-info-value">28 ㎍/㎥</span>
-              </div>
-              <div class="city-info-item">
-                <span class="city-info-label">초미세먼지</span>
-                <span class="city-info-value">15 ㎍/㎥</span>
-              </div>
-            </div>
-          </div>
-          <div class="city-card">
-            <div class="city-header">
-              <h3 class="city-name">대구</h3>
-              <span class="city-grade bad">나쁨</span>
-            </div>
-            <div class="city-info">
-              <div class="city-info-item">
-                <span class="city-info-label">미세먼지</span>
-                <span class="city-info-value">78 ㎍/㎥</span>
-              </div>
-              <div class="city-info-item">
-                <span class="city-info-label">초미세먼지</span>
-                <span class="city-info-value">42 ㎍/㎥</span>
-              </div>
-            </div>
-          </div>
-          <div class="city-card">
-            <div class="city-header">
-              <h3 class="city-name">인천</h3>
-              <span class="city-grade normal">보통</span>
-            </div>
-            <div class="city-info">
-              <div class="city-info-item">
-                <span class="city-info-label">미세먼지</span>
-                <span class="city-info-value">52 ㎍/㎥</span>
-              </div>
-              <div class="city-info-item">
-                <span class="city-info-label">초미세먼지</span>
-                <span class="city-info-value">28 ㎍/㎥</span>
-              </div>
-            </div>
-          </div>
-          <div class="city-card">
-            <div class="city-header">
-              <h3 class="city-name">광주</h3>
-              <span class="city-grade good">좋음</span>
-            </div>
-            <div class="city-info">
-              <div class="city-info-item">
-                <span class="city-info-label">미세먼지</span>
-                <span class="city-info-value">32 ㎍/㎥</span>
-              </div>
-              <div class="city-info-item">
-                <span class="city-info-label">초미세먼지</span>
-                <span class="city-info-value">18 ㎍/㎥</span>
-              </div>
-            </div>
-          </div>
-          <div class="city-card">
-            <div class="city-header">
-              <h3 class="city-name">대전</h3>
-              <span class="city-grade normal">보통</span>
-            </div>
-            <div class="city-info">
-              <div class="city-info-item">
-                <span class="city-info-label">미세먼지</span>
-                <span class="city-info-value">48 ㎍/㎥</span>
-              </div>
-              <div class="city-info-item">
-                <span class="city-info-label">초미세먼지</span>
-                <span class="city-info-value">26 ㎍/㎥</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+	  <div class="cities-container">
+	    <h2 class="section-title">주요 도시 대기질 현황</h2>
+	    <div class="cities-grid">
+
+	      <c:forEach var="city" items="${cityAverages}">
+	        <div class="city-card">
+	          <div class="city-header">
+	            <h3 class="city-name">${city.stationName}</h3>
+
+	            <c:choose>
+	              <c:when test="${city.addr eq '좋음'}">
+	                <span class="city-grade good">좋음</span>
+	              </c:when>
+	              <c:when test="${city.addr eq '보통'}">
+	                <span class="city-grade normal">보통</span>
+	              </c:when>
+	              <c:when test="${city.addr eq '나쁨'}">
+	                <span class="city-grade bad">나쁨</span>
+	              </c:when>
+	              <c:otherwise>
+	                <span class="city-grade very-bad">매우나쁨</span>
+	              </c:otherwise>
+	            </c:choose>
+	          </div>
+
+	          <div class="city-info">
+	            <div class="city-info-item">
+	              <span class="city-info-label">미세먼지</span>
+	              <span class="city-info-value">${city.pm10Value} ㎍/㎥</span>
+	            </div>
+	            <div class="city-info-item">
+	              <span class="city-info-label">초미세먼지</span>
+	              <span class="city-info-value">${city.pm25Value} ㎍/㎥</span>
+	            </div>
+	          </div>
+	        </div>
+	      </c:forEach>
+
+	    </div>
+	  </div>
+	</section>
 
     <!-- 대기질 개선 팁 섹션 -->
     <section class="tips-section">
