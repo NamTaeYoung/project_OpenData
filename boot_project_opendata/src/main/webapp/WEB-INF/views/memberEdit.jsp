@@ -263,7 +263,7 @@
     <div class="promo-content">
       <div class="promo-nav">
         <a href="/main" class="nav-category">상세정보</a>
-        <a href="/board" class="nav-board">게시판</a>
+        <a href="/board/list" class="nav-board">게시판</a>
         <a href="/notice" class="nav-notice">공지사항</a>
         <a href="/qna" class="nav-qna">QnA</a>
       </div>
@@ -276,7 +276,7 @@
       <div class="edit-card">
         <h1 class="edit-title">회원 정보 수정</h1>
         
-        <form method="post" action="/mypage/edit">
+        <form method="post" action="/mypage/update">
           <div class="form-group">
             <label class="form-label">이름</label>
             <input type="text" name="user_name" class="form-input" value="${user.user_name}" required>
@@ -295,8 +295,8 @@
 
           <div class="form-group">
             <label class="form-label">비밀번호</label>
-            <input type="password" name="user_password" class="form-input" placeholder="변경할 비밀번호를 입력하세요">
-            <span class="form-hint">비밀번호를 변경하지 않으려면 비워두세요.</span>
+            <input type="password" name="user_pw" class="form-input" placeholder="변경할 비밀번호를 입력하세요">
+<!--        <span class="form-hint">비밀번호를 변경하지 않으려면 비워두세요.</span>-->
           </div>
 
           <div class="form-group">
