@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
@@ -65,7 +66,8 @@
           </h2>
           <div class="card-action">
             <a href="<c:url value='/mypage/edit'/>" class="btn btn-primary">수정</a>
-            <a href="<c:url value='/mypage/delete'/>" class="btn btn-danger" onclick="return confirm('정말 탈퇴하시겠습니까?');">탈퇴</a>
+<!--        <a href="<c:url value='/mypage/delete'/>" class="btn btn-danger" onclick="return confirm('정말 탈퇴하시겠습니까?');">탈퇴</a>-->
+			<a href="<c:url value='/mypage/withdraw'/>" class="btn btn-danger">탈퇴</a>
           </div>
         </div>
         <div class="info-grid">
@@ -99,64 +101,58 @@
             </span>
             <%-- 백엔드 연동 시: <span class="info-value">${user.phone}</span> --%>
           </div>
-          <div class="info-item">
-            <span class="info-label">가입일</span>
-            <span class="info-value">
-              <c:choose>
-                <c:when test="${not empty sessionScope.userRegDate}">${sessionScope.userRegDate}</c:when>
-                <c:otherwise><span class="empty">-</span></c:otherwise>
-              </c:choose>
-            </span>
-            <%-- 백엔드 연동 시: <span class="info-value">${user.regDate}</span> --%>
-          </div>
-          <div class="info-item">
-            <span class="info-label">최근 로그인</span>
-            <span class="info-value">
-              <c:choose>
-                <c:when test="${not empty sessionScope.userLastLogin}">${sessionScope.userLastLogin}</c:when>
-                <c:otherwise><span class="empty">-</span></c:otherwise>
-              </c:choose>
-            </span>
-            <%-- 백엔드 연동 시: <span class="info-value">${user.lastLogin}</span> --%>
-          </div>
+		  <div class="info-item">
+		    <span class="info-label">가입일</span>
+		    <span class="info-value">
+		      <c:choose>
+		        <c:when test="${not empty sessionScope.userRegDate}">
+		          <fmt:formatDate value="${sessionScope.userRegDate}" pattern="yyyy-MM-dd (E)" />
+		        </c:when>
+		        <c:otherwise><span class="empty">-</span></c:otherwise>
+		      </c:choose>
+		    </span>
+		  </div>
         </div>
       </div>
 
-      <!-- 게시판 목록 조회 섹션 -->
-      <div class="mypage-card">
-        <div class="card-header">
-          <h2 class="card-title">
-            <span class="card-title-icon">📝</span>
-            게시판 목록 조회
-          </h2>
-          <div class="card-action">
-            <a href="/board" class="btn btn-secondary">전체 목록 보기</a>
-          </div>
-        </div>
-        <div class="board-list">
-          <%-- 백엔드 연동 시: <c:forEach> 태그로 내 게시글 표시
-          <c:forEach var="board" items="${myBoardList}">
-            <div class="board-list-item">
-              <div class="board-list-info">
-                <h3 class="board-list-title">${board.title}</h3>
-                <div class="board-list-meta">
-                  <span>작성일: ${board.regDate}</span>
-                  <span>조회수: ${board.viewCount}</span>
-                </div>
-              </div>
-              <div class="board-list-actions">
-                <a href="/board/${board.id}" class="btn btn-secondary">보기</a>
-                <a href="/board/${board.id}/edit" class="btn btn-primary">수정</a>
-              </div>
-            </div>
-          </c:forEach>
-          --%>
-          <!-- 데이터가 없을 때 -->
-          <div class="empty-message">
-            작성한 게시글이 없습니다.
-          </div>
-        </div>
-      </div>
+	  <!-- 게시판 목록 조회 섹션 -->
+	        <div class="mypage-card">
+	          <div class="card-header">
+	            <h2 class="card-title">
+	              <span class="card-title-icon">📝</span>
+	              게시판 목록 조회
+	            </h2>
+	            <div class="card-action">
+	              <a href="/board/list" class="btn btn-secondary">전체 목록 보기</a>
+	            </div>
+	          </div>
+	          <div class="board-list">
+	            <c:choose>
+	              <c:when test="${not empty myBoardList}">
+	                <c:forEach var="board" items="${myBoardList}">
+	                  <div class="board-list-item">
+	                    <div class="board-list-info">
+	                      <h3 class="board-list-title">
+	                        <a href="/board/detail?boardNo=${board.boardNo}">${board.boardTitle}</a>
+	                      </h3>
+	                      <div class="board-list-meta">
+	                        <span>작성일: ${board.boardDate.year}-${String.format("%02d", board.boardDate.monthValue)}-${String.format("%02d", board.boardDate.dayOfMonth)} 
+	                              ${String.format("%02d", board.boardDate.hour)}:${String.format("%02d", board.boardDate.minute)}</span>
+	                        <span>조회수: ${board.boardHit}</span>
+	                      </div>
+	                    </div>
+	                  </div>
+	                </c:forEach>
+	              </c:when>
+	              <c:otherwise>
+	                <div class="empty-message">
+	                  작성한 게시글이 없습니다.
+	                </div>
+	              </c:otherwise>
+	            </c:choose>
+	          </div>
+	        </div>
+
 
       <!-- 관심 지역 조회 섹션 -->
       <div class="mypage-card">
@@ -165,38 +161,53 @@
             <span class="card-title-icon">📍</span>
             관심 지역 조회
           </h2>
-          <div class="card-action">
-            <a href="<c:url value='/mypage/region/add'/>" class="btn btn-primary">지역 추가</a>
-          </div>
+<!--          <div class="card-action">-->
+<!--            <a href="<c:url value='/mypage/region/add'/>" class="btn btn-primary">지역 추가</a>-->
+<!--          </div>-->
         </div>
         <div class="region-grid">
-          <%-- 백엔드 연동 시: <c:forEach> 태그로 관심 지역 표시
-          <c:forEach var="region" items="${favoriteRegions}">
-            <div class="region-card">
-              <h3 class="region-name">${region.name}</h3>
-              <span class="region-grade ${region.grade}">
-                <c:choose>
-                  <c:when test="${region.grade == 'good'}">좋음</c:when>
-                  <c:when test="${region.grade == 'normal'}">보통</c:when>
-                  <c:when test="${region.grade == 'bad'}">나쁨</c:when>
-                  <c:when test="${region.grade == 'very-bad'}">매우 나쁨</c:when>
-                </c:choose>
-              </span>
-              <div style="margin-top: 12px; font-size: 14px; color: var(--muted);">
-                미세먼지: ${region.pm10} ㎍/㎥
-              </div>
-              <button class="region-remove" onclick="removeRegion('${region.id}')">삭제</button>
-            </div>
-          </c:forEach>
-          --%>
-          <!-- 데이터가 없을 때 -->
-          <div class="empty-message" style="grid-column: 1 / -1;">
-            등록된 관심 지역이 없습니다. 지역을 추가해보세요.
-          </div>
+			<c:choose>
+			    <c:when test="${not empty favorites}">
+					<c:forEach var="region" items="${favorites}">
+					    <div class="region-card">
+					        <!-- stationName으로 정확히 호출 -->
+					        <h3 class="region-name">${region.stationName}</h3>
+					        <span class="region-grade 
+					            ${region.pm10Value <= 30 ? 'good' :
+					              region.pm10Value <= 80 ? 'normal' :
+					              region.pm10Value <= 150 ? 'bad' : 'very-bad'}">
+					            <c:choose>
+					                <c:when test="${region.pm10Value <= 30}">좋음</c:when>
+					                <c:when test="${region.pm10Value <= 80}">보통</c:when>
+					                <c:when test="${region.pm10Value <= 150}">나쁨</c:when>
+					                <c:otherwise>매우 나쁨</c:otherwise>
+					            </c:choose>
+					        </span>
+					        <div style="margin-top: 12px; font-size: 14px; color: var(--muted);">
+					            미세먼지: ${region.pm10Value} ㎍/㎥
+					        </div>
+					        <!-- 삭제 버튼: favoriteId로 호출 -->
+					        <button class="region-remove" onclick="removeRegion(${region.favoriteId})">삭제</button>
+					    </div>
+					</c:forEach>
+			    </c:when>
+			    <c:otherwise>
+			        <div class="empty-message" style="grid-column: 1 / -1;">
+			            등록된 관심 지역이 없습니다. 지역을 추가해보세요.
+			        </div>
+			    </c:otherwise>
+			</c:choose>
         </div>
       </div>
     </div>
   </section>
+  
+  <c:if test="${not empty msg}">
+  <script>
+      alert("${msg}");
+  </script>
+  </c:if>
+
 
   <!-- 푸터 -->
   <footer class="footer">
@@ -215,20 +226,26 @@
   </footer>
 
   <script>
-    // 관심 지역 삭제 함수
-    function removeRegion(regionId) {
+  function removeRegion(regionId) {
       if (confirm('이 관심 지역을 삭제하시겠습니까?')) {
-        // 백엔드 연동 시: fetch로 삭제 요청
-        // fetch('/mypage/region/' + regionId, {
-        //   method: 'DELETE'
-        // }).then(response => {
-        //   if (response.ok) {
-        //     location.reload();
-        //   }
-        // });
-        alert('백엔드 연동 후 사용 가능합니다.');
+          fetch('/mypage/region/' + regionId, {
+              method: 'DELETE',
+              headers: {
+                  'Content-Type': 'application/json'
+              }
+          })
+          .then(response => response.json())
+          .then(data => {
+              alert(data.message);  // 서버에서 보내준 메시지 표시
+              location.reload();    // 삭제 후 새로고침
+          })
+          .catch(err => {
+              console.error(err);
+              alert('삭제 중 오류가 발생했습니다.');
+          });
       }
-    }
+  }
   </script>
+
 </body>
 </html>
