@@ -126,4 +126,8 @@ public class UserServicelmpl implements UserService {
     public int updatePasswordByToken(Map<String, String> param) {
         return sqlSession.update("com.boot.dao.UserDAO.updatePasswordByToken", param);
     }
+	 // userId로 닉네임을 가져오는 메서드
+    public String getNicknameByUserId(String userId) {
+        return userDAO.findNicknameByUserId(userId);  // UserDAO를 통해 닉네임 조회
+    }
 }
