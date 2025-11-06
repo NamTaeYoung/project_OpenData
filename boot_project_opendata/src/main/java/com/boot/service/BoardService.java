@@ -1,12 +1,21 @@
-// src/main/java/com/boot/service/BoardService.java
 package com.boot.service;
 
+import java.io.IOException;
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.boot.dto.BoardAttachDTO;
 import com.boot.dto.BoardDTO;
 
 public interface BoardService {
-
+    void write(BoardDTO dto);
+    Long writeWithAttachments(BoardDTO dto, List<MultipartFile> files) throws IOException;
+    List<BoardAttachDTO> getImages(Long boardNo); 
+    BoardDTO find(Long boardNo);
+    String getNicknameByUserId(String userId);
+//    int getDisplayNo(Long boardNo);
+    
     /** 페이지 목록 조회 */
     List<BoardDTO> getPage(int page, int size);
 
@@ -30,6 +39,5 @@ public interface BoardService {
 
     /** 삭제 */
     void delete(Long boardNo);
-    
     
 }
