@@ -14,6 +14,8 @@ public class UserServicelmpl implements UserService {
 
     @Autowired
     private SqlSessionTemplate sqlSession;
+	@Autowired
+    private UserDAO userDAO;
 
     /** 로그인 검증: users.user_pw를 읽어와 비교 (현 상태 유지) */
     public boolean loginYn(Map<String, String> param) {
