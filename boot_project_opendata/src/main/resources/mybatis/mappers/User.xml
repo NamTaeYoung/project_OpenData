@@ -142,7 +142,7 @@
 		SET
 		user_name = #{user_name},
 		user_nickname = #{user_nickname},
-		user_pw = #{user_pw},
+		user_pw = NVL(NULLIF(#{user_pw, jdbcType=VARCHAR}, ''), user_pw),
 		user_email = #{user_email},
 		user_phone_num = #{user_phone_num},
 		user_post_num = #{user_post_num},
