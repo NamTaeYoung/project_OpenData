@@ -1,52 +1,34 @@
 package com.boot.dto;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class BoardDTO implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    // NUMBER PRIMARY KEY
+public class BoardDTO {
     private Long boardNo;
-
-    // VARCHAR2(60) NOT NULL (FK: users.user_id)
     private String userId;
-
-    // VARCHAR2(100) NOT NULL
     private String boardTitle;
-
-    // VARCHAR2(300) NOT NULL
     private String boardContent;
 
-    // TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    // ✅ DB: TIMESTAMP; API(JSON)로 내보낼 때 형식 지정
+    @JsonFormat(shape = JsonFormat.Shape.STRING,
+                pattern = "yyyy-MM-dd HH:mm",  // 초가 필요하면 "yyyy-MM-dd HH:mm:ss"
+                timezone = "Asia/Seoul")
     private LocalDateTime boardDate;
 
-    // NUMBER DEFAULT 0 NOT NULL
     private Integer boardHit;
-
-    // VARCHAR2(300) NULL
     private String boardImage;
-    
     private String userNickname;
-    
-    @JsonIgnore
+
+    // ✅ 화면(JSP) 표시용: 안전하고 가벼운 포맷터 사용
+    @JsonIgnore // JSON 응답에 이 문자열을 포함시키지 않으려면 유지
     public String getFormattedDate() {
         if (boardDate == null) return "";
-        return boardDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        return boardDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+        // 초가 필요하면 "yyyy-MM-dd HH:mm:ss"
     }
 }
