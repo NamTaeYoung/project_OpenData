@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.boot.dto.UserDTO;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
+@Mapper
 public interface UserDAO {
 	String findNicknameByUserId(@Param("userId") String userId);
 	
