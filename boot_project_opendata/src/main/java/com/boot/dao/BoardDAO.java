@@ -44,5 +44,6 @@ public interface BoardDAO {
     int countSearch(@Param("type") String type,
                     @Param("keyword") String keyword);
     
-    
+ // 사용자별 게시글 조회 (최신순, 최대 5개)
+    List<BoardDTO> selectMyBoardList(String userId);
 }
