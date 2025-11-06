@@ -245,25 +245,25 @@ public class ViewController {
     }
     
     // 공지사항 목록
-    @GetMapping("/noticeMangement")
-    public String noticeMangement(HttpSession session) {
+    @GetMapping("/noticeManagement")
+    public String noticeManagement(HttpSession session) {
     	// 관리자 권한 체크
     	Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
     	if (isAdmin == null || !isAdmin) {
     		return "redirect:/admin/login";
     	}
-    	return "admin/noticeMangement";
+    	return "admin/noticeManagement";
     }
     
     // QnA 목록
-    @GetMapping("/qnaMangement")
-    public String qnaMangement(HttpSession session) {
+    @GetMapping("/qnaManagement")
+    public String qnaManagement(HttpSession session) {
     	// 관리자 권한 체크
     	Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
     	if (isAdmin == null || !isAdmin) {
     		return "redirect:/admin/login";
     	}
-    	return "admin/qnaMangement";
+    	return "admin/qnaManagement";
     }
     
     // 게시판 상세 (나중에 구현)
