@@ -61,7 +61,7 @@ header{ position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px s
 .promo-nav{
   display: flex;
   align-items: center;
-  gap: 80px;
+  gap: 200px;
 }
 .promo-nav a{
   display: inline-flex;
@@ -91,10 +91,12 @@ header{ position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px s
 }
 .promo-nav a:hover::after{ transform: scaleX(1); }
 .promo-nav a.active::after{ transform: scaleX(1); }
+.promo-nav a:hover { background: rgba(255,255,255,0.1); }
+
 .promo-nav a + a::before{
   content: "";
   position: absolute;
-  left: -40px;
+  left: -100px;
   top: 50%;
   width: 2px;
   height: 26px;
