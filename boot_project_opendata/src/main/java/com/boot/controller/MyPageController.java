@@ -3,8 +3,11 @@ package com.boot.controller;
 import com.boot.dao.BoardDAO;
 import com.boot.dto.BoardDTO;
 import com.boot.dto.FavoriteStationDTO;
+import com.boot.dto.StationDTO;
 import com.boot.dto.UserDTO;
 import com.boot.service.UserService;
+import com.boot.util.AirQualityCalculator;
+import com.boot.util.ExcelReader;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,7 +33,13 @@ public class MyPageController {
     
     @Autowired
     BoardDAO boardDAO;  
-
+    
+    @Autowired
+    private ExcelReader excelReader;
+    
+    @Autowired
+    private AirQualityCalculator airQualityCalculator;
+    
     // 마이페이지 화면
     @GetMapping
     public String mypage(HttpSession session, Model model, @ModelAttribute("msg") String msg) {
@@ -60,7 +69,11 @@ public class MyPageController {
         
         // 메시지 전달
         model.addAttribute("msg", msg);
+        
+        List<StationDTO> stations = excelReader.readStations();
+        Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
 
+        model.addAttribute("cityAverages", cityAverages.values());
         return "mypage"; 
     }
 
