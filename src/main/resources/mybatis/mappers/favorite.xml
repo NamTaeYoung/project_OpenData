@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.boot.dao.FavoriteStationDAO">
+
+	<resultMap id="FavoriteStationMap" type="com.boot.dto.FavoriteStationDTO">
+		<id property="favoriteId" column="favorite_id" />
+		<result property="userId" column="user_id" />
+		<result property="stationName" column="station_name" />
+		<result property="dmY" column="dm_y" />
+		<result property="dmX" column="dm_x" />
+		<result property="pm10Value" column="pm10_value" />
+		<result property="pm25Value" column="pm25_value" />
+		<result property="o3Value" column="o3_value" />
+		<result property="no2Value" column="no2_value" />
+		<result property="coValue" column="co_value" />
+		<result property="so2Value" column="so2_value" />
+		<result property="createdAt" column="created_at" />
+		<result property="updatedAt" column="updated_at" />
+	</resultMap>
+
+	<select id="getFavoriteList" parameterType="string"
+		resultType="com.boot.dto.FavoriteStationDTO">
+		SELECT
+		favorite_id AS favoriteId,
+		user_id AS userId,
+		station_name AS stationName,
+		dm_y AS dmY,
+		dm_x AS dmX,
+		pm10_value AS pm10Value,
+		pm25_value AS pm25Value,
+		o3_value AS o3Value,
+		no2_value AS no2Value,
+		co_value AS coValue,
+		so2_value AS so2Value,
+		created_at AS createdAt
+		FROM FAVORITE_STATION
+		WHERE user_id = #{userId}
+		ORDER BY favorite_id ASC
+	</select>
+
+
+	<!-- 1) 추가(INSERT) : (user_id, station_name) 유니크 충돌 시 업데이트로 바꾸고 싶으면 MERGE 사용 -->
+	<insert id="insertFavorite" parameterType="com.boot.dto.FavoriteStationDTO">
+		INSERT INTO FAVORITE_STATION
+		(user_id, station_name, dm_y, dm_x, pm10_value, pm25_value, o3_value,
+		no2_value, co_value, so2_value)
+		VALUES
+		(#{userId}, #{stationName}, #{dmY}, #{dmX}, #{pm10Value}, #{pm25Value},
+		#{o3Value}, #{no2Value}, #{coValue}, #{so2Value})
+	</insert>
+
+	<!-- (옵션) MERGE로 upsert -->
+	<insert id="upsertFavorite" parameterType="com.boot.dto.FavoriteStationDTO">
+		MERGE INTO FAVORITE_STATION t
+		USING (SELECT #{userId} AS user_id, #{stationName} AS station_name FROM
+		dual) s
+		ON (t.user_id = s.user_id AND t.station_name = s.station_name)
+		WHEN MATCHED THEN UPDATE SET
+		dm_y = #{dmY},
+		dm_x = #{dmX},
+		pm10_value = #{pm10Value},
+		pm25_value = #{pm25Value},
+		o3_value = #{o3Value},
+		no2_value = #{no2Value},
+		co_value = #{coValue},
+		so2_value = #{so2Value},
+		updated_at = SYSTIMESTAMP
+		WHEN NOT MATCHED THEN INSERT
+		(user_id, station_name, dm_y, dm_x, pm10_value, pm25_value, o3_value,
+		no2_value, co_value, so2_value)
+		VALUES
+		(#{userId}, #{stationName}, #{dmY}, #{dmX}, #{pm10Value}, #{pm25Value},
+		#{o3Value}, #{no2Value}, #{coValue}, #{so2Value})
+	</insert>
+
+	<!-- 2) 삭제 -->
+	<delete id="deleteFavorite">
+		DELETE FROM FAVORITE_STATION
+		WHERE user_id = #{userId}
+		AND station_name = #{stationName}
+	</delete>
+
+	<!-- ===== 새로 추가: favoriteId로 삭제 ===== -->
+	<delete id="deleteFavoriteById" parameterType="long">
+		DELETE FROM FAVORITE_STATION
+		WHERE favorite_id = #{favoriteId}
+	</delete>
+
+	<!-- 3) 유저별 목록 -->
+	<select id="selectFavoritesByUser" resultMap="FavoriteStationMap">
+		SELECT *
+		FROM FAVORITE_STATION
+		WHERE user_id = #{userId}
+		ORDER BY created_at DESC
+	</select>
+
+	<!-- 4) 단건 조회 -->
+	<select id="selectFavoriteOne" resultMap="FavoriteStationMap">
+		SELECT *
+		FROM FAVORITE_STATION
+		WHERE user_id = #{userId}
+		AND station_name = #{stationName}
+	</select>
+
+</mapper>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.boot.dao.AdminMemberDAO">
+
+  <!-- 전체 회원 목록 조회 -->
+  <select id="getAllMembers" resultType="hashmap">
+    SELECT
+        user_id            AS "user_id",
+        user_name          AS "user_name",
+        user_nickname      AS "user_nickname",
+        user_email         AS "user_email",
+        user_phone_num     AS "user_phone_num",
+        user_post_num      AS "user_post_num",
+        user_address       AS "user_address",
+        user_detail_address AS "user_detail_address",
+        login_type         AS "login_type",
+        TO_CHAR(reg_date, 'YYYY-MM-DD HH24:MI:SS') AS "reg_date",
+        TO_CHAR(last_login_date, 'YYYY-MM-DD HH24:MI:SS') AS "last_login_date",
+        login_fail_count   AS "login_fail_count"
+    FROM opendata_users
+    ORDER BY reg_date DESC
+  </select>
+
+  <!-- 회원 상세 정보 조회 -->
+  <select id="getMemberById" parameterType="string" resultType="hashmap">
+    SELECT
+        user_id            AS "user_id",
+        user_name          AS "user_name",
+        user_nickname      AS "user_nickname",
+        user_email         AS "user_email",
+        user_phone_num     AS "user_phone_num",
+        user_post_num      AS "user_post_num",
+        user_address       AS "user_address",
+        user_detail_address AS "user_detail_address",
+        login_type         AS "login_type",
+        TO_CHAR(reg_date, 'YYYY-MM-DD HH24:MI:SS') AS "reg_date",
+        TO_CHAR(last_login_date, 'YYYY-MM-DD HH24:MI:SS') AS "last_login_date",
+        login_fail_count   AS "login_fail_count"
+    FROM opendata_users
+    WHERE user_id = #{user_id}
+  </select>
+
+  <!-- 회원 정보 수정 -->
+  <update id="updateMember" parameterType="map">
+    UPDATE opendata_users
+    SET user_name = #{user_name},
+        user_nickname = #{user_nickname},
+        user_email = #{user_email},
+        user_phone_num = #{user_phone_num},
+        user_post_num = #{user_post_num},
+        user_address = #{user_address},
+        user_detail_address = #{user_detail_address}
+    WHERE user_id = #{user_id}
+  </update>
+
+  <!-- 회원 삭제 -->
+  <delete id="deleteMember" parameterType="string">
+    DELETE FROM opendata_users
+    WHERE user_id = #{user_id}
+  </delete>
+
+</mapper>

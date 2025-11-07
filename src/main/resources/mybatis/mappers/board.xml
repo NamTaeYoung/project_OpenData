@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.boot.dao.BoardDAO">
+
+	<!-- 게시글 등록: 첨부 이미지 없음, 내용만 저장 -->
+	<insert id="insert" parameterType="com.boot.dto.BoardDTO">
+		<selectKey keyProperty="boardNo" resultType="long" order="BEFORE">
+			SELECT POST_BOARD_SEQ.NEXTVAL FROM dual
+		</selectKey> INSERT INTO
+		post_board (board_no, user_id, board_title, board_content, board_date,
+		board_hit) VALUES (#{boardNo}, #{userId}, #{boardTitle},
+		#{boardContent}, SYSTIMESTAMP, 0) </insert>
+	<select id="find" parameterType="long" resultType="com.boot.dto.BoardDTO">
+		SELECT
+		board_no AS boardNo,
+		user_id AS userId,
+		board_title AS boardTitle,
+		board_content AS boardContent,
+		board_date AS boardDate,
+		board_hit AS boardHit
+		FROM post_board
+		WHERE board_no = #{boardNo}
+	</select>
+	<!-- 시퀀스 현재값 (필요시 사용) -->
+	<select id="selectCurrBoardNo" resultType="long">
+		SELECT POST_BOARD_SEQ.CURRVAL FROM dual
+	</select>
+
+	<!-- 카멜케이스 자동매핑을 쓰지 않는다면 resultMap으로 명시 매핑 -->
+	<!-- mapUnderscoreToCamelCase=true면 resultType만으로도 매핑됨 -->
+	<resultMap id="BoardMap" type="com.boot.dto.BoardDTO">
+		<id column="board_no" property="boardNo" />
+		<result column="user_id" property="userId" />
+		<result column="user_nickname" property="userNickname" />
+		<result column="board_title" property="boardTitle" />
+		<result column="board_content" property="boardContent" />
+		<result column="board_date" property="boardDate" />
+		<result column="board_hit" property="boardHit" />
+	</resultMap>
+
+	<sql id="columns">
+		board_no, user_id, board_title, board_content,
+		board_date, board_hit
+	</sql>
+
+	<!-- 목록(페이징) : Oracle 12c+ -->
+	<select id="selectPage" resultMap="BoardMap">
+<![CDATA[
+    SELECT * FROM (
+        SELECT ROWNUM rn, t.*
+        FROM (
+            SELECT b.board_no, b.user_id, u.user_nickname, b.board_title, b.board_content,
+                   b.board_date, b.board_hit
+            FROM post_board b
+            LEFT JOIN opendata_users u ON b.user_id = u.user_id
+            ORDER BY b.board_no DESC
+        ) t
+        WHERE ROWNUM <= #{offset} + #{size}
+    )
+    WHERE rn > #{offset}
+]]>
+</select>
+
+
+	<select id="countAll" resultType="int">
+		SELECT COUNT(*) FROM post_board
+	</select>
+
+	<select id="selectOne" parameterType="long" resultMap="BoardMap">
+		SELECT b.board_no, b.user_id, u.user_nickname, b.board_title,
+		b.board_content,
+		b.board_date, b.board_hit
+		FROM post_board b
+		LEFT JOIN opendata_users u ON b.user_id = u.user_id
+		WHERE b.board_no = #{boardNo}
+	</select>
+
+
+	<!-- CREATE SEQUENCE board_seq START WITH 1 INCREMENT BY 1; -->
+	<!--  <insert id="insert" parameterType="com.boot.dto.BoardDTO">-->
+	<!--    <selectKey resultType="long" keyProperty="boardNo" order="BEFORE">-->
+	<!--      SELECT board_seq.NEXTVAL FROM dual-->
+	<!--    </selectKey>-->
+	<!--    INSERT INTO post_board (-->
+	<!--      board_no, user_id, board_title, board_content, board_date, board_hit-->
+	<!--    ) VALUES (-->
+	<!--      #{boardNo}, #{userId}, #{boardTitle}, #{boardContent}, SYSTIMESTAMP,
+	0-->
+	<!--    )-->
+	<!--  </insert>-->
+
+	<!-- INSERT: 시퀀스 없이 외부에서 boardNo를 주입할 때 사용하는 대안
+  <insert id="insert" parameterType="com.boot.dto.BoardDTO">
+    INSERT INTO post_board (
+      board_no, user_id, board_title, board_content, board_date, board_hit
+    ) VALUES (
+      #{boardNo}, #{userId}, #{boardTitle}, #{boardContent}, SYSTIMESTAMP, 0,
+	#{boardImage}
+    )
+  </insert>
+  -->
+
+	<update id="update" parameterType="com.boot.dto.BoardDTO">
+		UPDATE post_board
+		SET board_title = #{boardTitle},
+		board_content = #{boardContent},
+		WHERE board_no = #{boardNo}
+	</update>
+
+	<delete id="delete" parameterType="long">
+		DELETE FROM post_board
+		WHERE board_no = #{boardNo}
+	</delete>
+
+	<update id="increaseHit" parameterType="long">
+		UPDATE post_board
+		SET board_hit = board_hit + 1
+		WHERE board_no = #{boardNo}
+	</update>
+	<!-- 🔎 검색 조건 공통(where) -->
+	<sql id="searchWhere">
+		<where>
+			<if test="keyword != null and keyword != ''">
+				<choose>
+					<!-- 제목 -->
+					<when test="type == 'title'">
+						b.board_title LIKE '%' || #{keyword} || '%'
+					</when>
+					<!-- 내용 -->
+					<when test="type == 'content'">
+						b.board_content LIKE '%' || #{keyword} || '%'
+					</when>
+					<!-- 작성자 (user_nickname을 기준으로 수정) -->
+					<when test="type == 'writer'">
+						u.user_nickname LIKE '%' || #{keyword} || '%'
+					</when>
+					<!-- 닉네임 -->
+					<when test="type == 'nickname'">
+						u.user_nickname LIKE '%' || #{keyword} || '%'
+					</when>
+					<!-- 기본: 제목+내용 -->
+					<otherwise>
+						(b.board_title LIKE '%' || #{keyword} || '%'
+						OR b.board_content LIKE '%' || #{keyword} || '%')
+					</otherwise>
+				</choose>
+			</if>
+		</where>
+	</sql>
+
+
+	<select id="searchPage" resultMap="BoardMap">
+	<![CDATA[
+	  SELECT * FROM (
+	    SELECT ROWNUM rn, t.*
+	    FROM (
+	      SELECT b.board_no, b.user_id, u.user_nickname, b.board_title, b.board_content,
+	             b.board_date, b.board_hit
+	      FROM post_board b
+	      LEFT JOIN opendata_users u ON b.user_id = u.user_id
+	]]>
+		<!-- 반드시 ORDER BY 전에 WHERE 포함 -->
+		<include refid="searchWhere" />
+	<![CDATA[
+	      ORDER BY b.board_no DESC
+	    ) t
+	    WHERE ROWNUM <= #{offset} + #{size}
+	  )
+	  WHERE rn > #{offset}
+	]]>
+	</select>
+
+	<select id="countSearch" resultType="int"> SELECT COUNT(*) FROM post_board b
+		LEFT JOIN opendata_users u ON b.user_id = u.user_id <include
+			refid="searchWhere" />
+	</select>
+
+	<!-- 사용자별 게시글 목록 조회 (마이페이지용 - 최신 5개) -->
+	<select id="selectMyBoardList" parameterType="string" resultMap="BoardMap">
+	<![CDATA[
+	  SELECT * FROM (
+	    SELECT b.board_no, b.user_id, u.user_nickname, b.board_title, b.board_content,
+	           b.board_date, b.board_hit
+	    FROM post_board b
+	    LEFT JOIN opendata_users u ON b.user_id = u.user_id
+	    WHERE b.user_id = #{userId}
+	    ORDER BY b.board_no DESC
+	  )
+	  WHERE ROWNUM <= 5
+	]]>
+</select>
+
+
+</mapper>

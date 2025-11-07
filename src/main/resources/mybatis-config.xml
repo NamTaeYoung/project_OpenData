@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+    PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<typeAliases>
+		<package name="com.boot.dto"/>
+	</typeAliases>
+	<mappers>
+		<mapper resource="mybatis/mappers/admindao.xml"/>
+		<mapper resource="mybatis/mappers/User.xml"/>
+		<mapper resource="mybatis/mappers/AdminMember.xml"/>
+		<mapper resource="mybatis/mappers/favorite.xml"/>
+		<mapper resource="mybatis/mappers/station.xml"/>
+		<mapper resource="mybatis/mappers/Board.xml"/>
+		<mapper resource="mybatis/mappers/BoardAttach.xml"/>
+	</mappers>
+</configuration>

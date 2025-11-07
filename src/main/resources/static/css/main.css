@@ -1,0 +1,1505 @@
+@charset "UTF-8";
+
+:root{
+  --brand: #2c5f8d;
+  --brand-dark: #1e4261;
+  --text: #1c1c1c;
+  --muted: #686868;
+  --bg: #ffffff;
+  --card: #f7f7f7;
+  --radius: 18px;
+  --shadow: 0 10px 30px rgba(0,0,0,.08);
+  --section-bg: #f8f9fa;
+  --good: #1890ff;
+  --normal: #52c41a;
+  --bad: #faad14;
+  --very-bad: #ff4d4f;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+
+body {
+  margin: 0;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.5;
+}
+
+/* 상단 프로모션 바 */
+.promo{
+  background: var(--brand);
+  padding: 0;
+  position: relative;
+  z-index: 6;
+}
+
+.promo-content{
+  max-width: 1100px;
+  margin: 0 auto;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.promo-nav{
+  display: flex;
+  align-items: center;
+  gap: 200px;
+}
+
+.promo-nav a{
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border-radius: 0;
+  color: #fff;
+  text-decoration: none;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 400;
+  font-size: clamp(18px, 2.2vw, 20px);
+  letter-spacing: .02em;
+  position: relative;
+  transition: color .2s ease;
+}
+
+.promo-nav a::after{
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -10px;
+  height: 3px;
+  background: #fff;
+  border-radius: 3px;
+  transform: scaleX(0);
+  transform-origin: 50% 100%;
+  transition: transform .25s ease;
+  opacity: .95;
+}
+
+.promo-nav a:hover::after{ transform: scaleX(1); }
+.promo-nav a.active::after{ transform: scaleX(1); }
+.promo-nav a:hover { background: rgba(255,255,255,0.1); }
+
+.promo-nav a + a::before{
+  content: "";
+  position: absolute;
+  left: -100px;
+  top: 50%;
+  width: 2px;
+  height: 26px;
+  background: rgba(255,255,255,.65);
+  transform: translateY(-50%);
+  border-radius: 2px;
+}
+
+/* 헤더 */
+header{ 
+  position:sticky; 
+  top:0; 
+  z-index:50; 
+  background:#fff; 
+  border-bottom:1px solid #eee; 
+}
+
+.nav{
+  max-width:1100px; 
+  margin:0 auto;
+  padding:14px 20px;
+  display:flex; 
+  align-items:center; 
+  justify-content:space-between; 
+  gap:12px;
+  position: relative; /* ✅ 배너 위치 기준 */
+}
+
+.brand{
+  font-weight:800; 
+  letter-spacing:.08em;
+  color:var(--brand); 
+  text-decoration:none;
+  display:flex; 
+  align-items:center; 
+  gap:.6rem;
+}
+
+.brand::before{
+  content:""; 
+  width:22px; 
+  height:22px; 
+  border-radius:6px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  box-shadow: 0 6px 14px rgba(44,95,141,.35) inset;
+  display:inline-block;
+}
+
+.nav-right{ 
+  display:flex; 
+  align-items:center; 
+  gap:18px; 
+  font-size:.95rem; 
+}
+
+.nav-right a{ 
+  color:#333; 
+  text-decoration:none; 
+}
+
+.nav-right a:hover{ 
+  color:var(--brand-dark) 
+}
+
+.nav-right .user-name{ 
+  color:#666; 
+  font-weight:700; 
+}
+/* 전체 배너 컨테이너 */
+.city-banner-wrapper {
+  position: absolute;
+  right: -25vw;  
+  top: 14px;
+  height: 22px;
+  width: 22vw;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: left;
+  font-size: 0.9rem;
+  color: #333;
+  display: inline-block;
+  vertical-align: middle;
+  gap: 6px;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+}
+/* 배너 안 텍스트 */
+.city-slide-item {
+  position: absolute;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.6s ease;
+  color: #444;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+}
+
+.city-slide-item.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 아이콘 */
+.city-slide-item::before {
+  content: "🌤️";
+  margin-right: 6px;
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
+/* 도시명 강조 */
+.city-slide-item strong {
+  margin: 0 2px;
+  font-weight: 700;
+}
+.map-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 0px;
+  position: relative;
+}
+/* 지도 툴바 */
+#toolbar {
+  position: relative;
+  z-index: 10;
+  left: auto;
+  top: auto;
+  margin: 28px auto 0;
+  max-width: 1200px;
+  background: rgba(255,255,255,0);
+  border-radius: 16px;
+  padding: 15px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  min-height: 64px;
+  font-size: 1.15rem;
+}
+
+#toolbar input[type="text"] {
+  padding: 18px 24px;
+  width: 400px;
+  border: 2px solid #ddd;
+  border-radius: 12px;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+#toolbar button {
+  padding: 18px 28px;
+  border: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+  background: var(--brand);
+  color: white;
+  transition: background 0.2s;
+  white-space: nowrap;
+  min-width: 140px;
+}
+#toolbar button:hover {
+  background: var(--brand-dark);
+}
+/* 로딩 & 메시지 */
+#loading {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 20px 30px;
+  border-radius: 10px;
+  font-size: 16px;
+  display: none;
+  z-index: 200;
+}
+#msg {
+  position: fixed;
+  right: 10px;
+  top: 10px;
+  background: rgba(0,0,0,0.8);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: none;
+  z-index: 100;
+}
+/* 측정소 마커 */
+.custom-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 9999px;
+  background: #ffffff;
+  border: 3px solid #333;
+  font-size: 16px;
+  font-weight: 800;
+  white-space: nowrap;
+  color: #111;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+  transform: translateY(-8px);
+  cursor: pointer;
+}
+.marker-good { border-color: #3b82f6; color: #3b82f6; }
+.marker-normal { border-color: #22c55e; color: #22c55e; }
+.marker-bad { border-color: #f59e0b; color: #f59e0b; }
+.marker-very-bad { border-color: #ef4444; color: #ef4444; }
+/* 정보창 */
+.info-window {
+  background: white;
+  border: 2px solid #333;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  padding: 15px;
+  min-width: 250px;
+  font-size: 13px;
+}
+.info-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #eee;
+}
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+.info-label { font-weight: 600; color: #555; }
+.info-value { font-weight: bold; }
+.grade-good { color: #3b82f6; }
+.grade-normal { color: #22c55e; }
+.grade-bad { color: #f59e0b; }
+.grade-very-bad { color: #ef4444; }
+
+/* 즐겨찾기 하트 아이콘 */
+.favorite-icon {
+  cursor: pointer;
+  font-size: 18px;
+  color: #e74c3c;
+  user-select: none;
+  transition: transform 0.2s, opacity 0.2s;
+  opacity: 0.85;
+  pointer-events: auto !important;
+  z-index: 9999 !important;
+}
+.favorite-icon:hover {
+  transform: scale(1.2);
+  opacity: 1;
+}
+/* Legend 박스 */
+#legend {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  z-index: 10;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(6px);
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.15);
+  padding: 12px 14px;
+  min-width: 200px;
+  font-size: 12px;
+  color: #111827;
+}
+#legend h4 {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  font-weight: 800;
+}
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.legend-row span.label {
+  flex: 1;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  border: 2px solid rgba(255,255,255,0.9);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.06) inset;
+}
+
+.dot-good { background: #3b82f6; }
+.dot-normal { background: #22c55e; }
+.dot-bad { background: #f59e0b; }
+.dot-verybad { background: #ef4444; }
+
+#legend .ts {
+  margin-top: 6px;
+  color: #6b7280;
+  text-align: right;
+  font-size: 11px;
+}
+
+/* 대기질 등급 안내 섹션 */
+.grade-guide-section {
+  background: var(--section-bg);
+  padding: 60px 0;
+}
+
+.grade-guide-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+.grade-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.grade-guide-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  border: 2px solid #eee;
+  transition: all .3s ease;
+  text-align: center;
+}
+.grade-guide-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,.1);
+}
+.grade-guide-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+.grade-guide-icon.good { background: #e6f7ff; }
+.grade-guide-icon.normal { background: #f6ffed; }
+.grade-guide-icon.bad { background: #fffbe6; }
+.grade-guide-icon.very-bad { background: #fff1f0; }
+
+.grade-guide-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+.grade-guide-title.good { color: #1890ff; }
+.grade-guide-title.normal { color: #52c41a; }
+.grade-guide-title.bad { color: #faad14; }
+.grade-guide-title.very-bad { color: #ff4d4f; }
+
+.grade-guide-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* 주요 도시 대기질 섹션 */
+.cities-section {
+  background: #fff;
+  padding: 60px 0;
+}
+
+.cities-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.cities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 40px;
+}
+.city-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 10px;
+  box-shadow: none;  
+  transition: all .3s ease;
+  display: block;
+  flex-direction: column;
+  gap: 1px;
+/*  border: 1px solid rgb(192, 192, 192);*/
+  margin-bottom: 10px; /* 카드 사이 여백 */
+  position: relative;
+  border-bottom: 1px solid #ccc; /* ✅ 구분선만 남김 */
+}
+.city-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,.12);
+}
+
+.city-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.city-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0;
+}
+
+.city-grade {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.city-grade.good { background: #f6ffed; color: #1890ff; }
+.city-grade.normal { background: #e6f7ff; color: #52c41a; }
+.city-grade.bad { background: #fffbe6; color: #faad14; }
+.city-grade.very-bad { background: #fff1f0; color: #ff4d4f; }
+
+.city-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.city-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.city-info-label {
+  font-size: 12px;
+}
+
+.city-info-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* 대기질 개선 팁 섹션 */
+.tips-section {
+  background: var(--section-bg);
+  padding: 60px 0;
+}
+
+.tips-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.tip-card {
+  background: linear-gradient(135deg, #f8f9fa, #fff);
+  border-radius: 16px;
+  padding: 28px;
+  border: 1px solid #eee;
+  transition: all .3s ease;
+}
+
+.tip-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0,0,0,.08);
+}
+
+.tip-icon {
+  font-size: 40px;
+  margin-bottom: 16px;
+}
+
+.tip-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 12px;
+}
+
+.tip-desc {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin: 0;
+}
+/* 반응형 */
+@media (max-width: 920px) {
+  #toolbar {
+    flex-direction: column;
+    width: calc(100% - 40px);
+  }
+  
+  #toolbar input[type="text"] {
+    width: 100%;
+  }
+  
+  .grade-guide-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .tips-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .grade-guide-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .cities-grid {
+    grid-template-columns: 1fr;
+  }
+  
+}
+/* 🌍 지도 위에 겹칠 UI용 레이어 (기본 틀만 추가) */
+.map-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* 기본적으로 클릭은 아래 지도에 전달 */
+  z-index: 5;
+}
+/* 내부 UI 요소는 클릭 가능하게 */
+.map-overlay > * {
+  pointer-events: auto;
+}
+/* ===========================
+   🌫 지도 위 고정 패널 UI
+   =========================== */
+   .overlay-search {
+     position: absolute;
+/*     bottom: 80px;  */
+    top: calc(80%);
+     left: 50%;
+     transform: translateX(-50%);
+     z-index: 2000;
+     background: rgba(255,255,255,0.95);
+     border-radius: 8px;
+     padding: 8px 12px;
+     box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+   }
+
+   .overlay-search input {
+     height: 38px; /* ✅ 버튼과 동일 높이 */
+    width: 300px;
+     padding: 0 12px;
+     border: 1px solid #ccc;
+     border-radius: 6px;
+     outline: none;
+     font-size: 14px;
+   }
+
+.overlay-search button {
+  background: #1a4e8a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  height: 38px; /* ✅ input과 동일 높이 */
+  padding: 0 14px; /* ✅ 버튼 가로 크기 조절 */
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 38px; /* ✅ 텍스트 세로 중앙정렬 */
+  transition: background 0.2s ease;
+}
+.overlay-search button:hover { background: #296fc7; }
+
+.dot {
+  width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-right: 6px;
+}
+.dot-good { background-color: #3b82f6; }
+.dot-normal { background-color: #22c55e; }
+.dot-bad { background-color: #f59e0b; }
+.dot-verybad { background-color: #ef4444; }
+
+.info-item {
+  font-size: 13px;
+  margin: 5px 0;
+}
+.info-item span.good { color: #3b82f6; }
+.info-item span.normal { color: #22c55e; }
+
+.map-container {
+   position: relative;
+     width: 100%;
+     height: calc(100vh - 180px); /* 헤더 높이 + 여백 감안 */
+}
+/* 오버레이 (검색창, 왼쪽 등급, 오른쪽 정보) 고정 위치 */
+.map-overlay {
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: none; /* 마우스 이벤트 지도에 통과 */
+}
+
+.map-overlay > div {
+  pointer-events: all; /* 버튼 클릭 가능 */
+}
+.map-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* ---------- 지도 위 오버레이 요소 ---------- */
+.map-overlay {
+  position: absolute;
+  top: 80px; /* 헤더 바로 아래 */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.map-overlay > div {
+  pointer-events: all;
+  background: rgba(255,255,255,0.9);
+  padding: 10px 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+/* ---------- 하단 정보 박스 (도시별, 팁 등) ---------- */
+.tips-section,
+.cities-section {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  width: 90%;
+  background: rgba(255,255,255,0.8);
+  border-radius: 20px;
+  padding: 15px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.15);
+}
+/* 오버레이들 지도 위에 배치 */
+.map-overlay {
+  position: absolute;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  z-index: 2;
+  pointer-events: none;
+}
+.map-overlay > div {
+  pointer-events: all;
+}
+
+/* 헤더는 지도 위로 유지 */
+header {
+  position: relative;
+  z-index: 3;
+}
+
+/* 전체 페이지 기본 구조 */
+html, body {
+  height: auto;          /* 전체 페이지 높이 자동 확장 */
+  min-height: 100vh;     /* 최소 높이는 한 화면 */
+  overflow-y: auto;      /* ✅ 스크롤 가능하게 */
+  overflow-x: hidden;    /* 가로 스크롤 방지 */
+}
+/* 오버레이 */
+.map-overlay {
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+/* ===== 전체 화면 기본 설정 ===== */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: auto;          /* ✅ 전체 페이지는 자동 높이 */
+  min-height: 100vh;     /* 화면보다 작으면 한 화면 채우기 */
+  overflow-x: hidden;    /* 가로 스크롤 방지 */
+  overflow-y: auto;      /* ✅ 세로 스크롤 1개만 남기기 */
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* ===== 지도 섹션 전체 ===== */
+.map-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+#kakao-map {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+/* ===== 지도 위 오버레이 (검색창, 정보창 등) ===== */
+.map-overlay {
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+/* ===== footer (고급 디자인) ===== */
+.footer {
+  position: relative;
+  background-color: rgb(26, 55, 83);
+  color: #e0e0e0;
+  padding: 10px 120px ;
+  text-align: left;
+  line-height: 1.8;
+  border-top: 1px solid var(--brand);
+  font-size: 15px;
+  margin-top: 80px;
+  overflow: hidden;
+}
+
+/* 배경 장식 패턴 */
+.footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(44, 95, 141, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(44, 95, 141, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2.5fr 1.2fr 1.2fr 1.1fr;
+  gap: 50px;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* 브랜드 섹션 */
+.footer-brand {
+  color: var(--brand);
+  font-size: 32px;
+  font-weight: 900;
+  margin-bottom: 25px;
+  letter-spacing: 0.08em;
+  position: relative;
+  padding-bottom: 20px;
+  text-shadow: 0 2px 10px rgba(44, 95, 141, 0.3);
+}
+
+.footer-brand::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--brand), var(--brand-dark), transparent);
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(44, 95, 141, 0.5);
+}
+
+/* 브랜드 설명 */
+.footer-brand-desc {
+  color: #a0a0a0;
+  font-size: 14px;
+  line-height: 1.8;
+  margin-top: 15px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+/* 정보 섹션 */
+.footer-info {
+  color: #b8b8b8;
+  font-size: 14px;
+  line-height: 2;
+  margin-bottom: 25px;
+}
+
+.footer-info-title {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  letter-spacing: 0.05em;
+  position: relative;
+  padding-left: 15px;
+}
+
+.footer-info-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 16px;
+  background: var(--brand);
+  border-radius: 2px;
+}
+
+.footer-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease;
+}
+
+.footer-info-item:hover {
+  transform: translateX(5px);
+}
+
+.footer-info-icon {
+  font-size: 18px;
+  color: var(--brand);
+  min-width: 20px;
+  text-align: center;
+  margin-top: 2px;
+}
+
+.footer-info-text {
+  flex: 1;
+  color: #b0b0b0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.footer-info-text strong {
+  color: #d0d0d0;
+  font-weight: 600;
+}
+
+/* 링크 섹션 */
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.footer-links-title {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  letter-spacing: 0.05em;
+  position: relative;
+  padding-left: 15px;
+}
+
+.footer-links-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 16px;
+  background: var(--brand);
+  border-radius: 2px;
+}
+
+.footer-links a {
+  color: #b0b0b0;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  position: relative;
+  padding-left: 25px;
+  display: inline-block;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.footer-links a::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  opacity: 0;
+  transition: all 0.3s ease;
+  color: var(--brand);
+  font-size: 12px;
+  transform: translateX(-5px);
+}
+
+.footer-links a:hover {
+  color: #fff;
+  padding-left: 30px;
+  transform: translateX(8px);
+}
+
+.footer-links a:hover::before {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* 소셜 미디어 섹션 */
+.footer-social {
+  margin-top: 10px;
+}
+
+.footer-social-title {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  letter-spacing: 0.05em;
+  position: relative;
+  padding-left: 15px;
+}
+
+.footer-social-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 16px;
+  background: var(--brand);
+  border-radius: 2px;
+}
+
+.footer-social-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.footer-social-link {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #b0b0b0;
+  text-decoration: none;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.footer-social-link:hover {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 5px 15px rgba(44, 95, 141, 0.4);
+}
+
+/* 푸터 하단 구분선 */
+.footer-bottom {
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-copyright {
+  color: #888;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+.footer-copyright strong {
+  color: var(--brand);
+  font-weight: 600;
+}
+
+.footer-badges {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.footer-badge {
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  font-size: 12px;
+  color: #b0b0b0;
+  transition: all 0.3s ease;
+}
+
+.footer-badge:hover {
+  background: rgba(44, 95, 141, 0.2);
+  border-color: var(--brand);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* 기존 푸터 스타일 호환성 유지 */
+.footer h2 {
+  color: rgb(255, 255, 255);
+  font-size: 26px;
+  font-weight: 800;
+  margin-bottom: 18px;
+}
+
+.footer p {
+  margin: 4px 0;
+  color: #ccc;
+}
+
+.footer a {
+  color: #bbb;
+  margin-right: 20px;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer a:hover {
+  color: #fff;
+}
+
+/* 푸터 반응형 */
+@media (max-width: 1024px) {
+  .footer-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+  
+  .footer {
+    padding: 60px 60px 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 50px 40px 30px;
+  }
+  
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+  
+  .footer-brand {
+    font-size: 26px;
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .footer-social-links {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer {
+    padding: 40px 20px 30px;
+  }
+  
+  .footer-brand {
+    font-size: 22px;
+  }
+  
+  .footer-info {
+    font-size: 13px;
+  }
+  
+  .footer-badges {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .footer-badge {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* 하단 전체 오버레이 */
+.bottom-overlay {
+  position: absolute;
+  bottom: 30px;
+  left: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 500; /* 지도 등급박스보다 뒤에 위치 */
+  pointer-events: none;
+}
+
+.city-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* 점 색상 */
+.dot-good { background: #1e90ff; }
+.dot-normal { background: #22c55e; }
+.dot-bad { background: #f59e0b; }
+.dot-verybad { background: #ef4444; }
+
+.city-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* 등급 색상 */
+.good { color: #1e90ff; font-weight: 600; }   
+.normal { color: #22c55e; font-weight: 600; }  
+.bad { color: #f59e0b; font-weight: 600; }  
+.very-bad { color: #ef4444; font-weight: 600; } 
+
+
+/* 왼쪽 위 - 대기질 등급 */
+.overlay-left {
+  list-style: none;
+  position: absolute;
+  top: -30px;
+  left: -70px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  z-index: 2000;
+  width: 250px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.overlay-left ul {
+  margin: 0;
+  padding: 0; /* ✅ 왼쪽 여백 완전히 제거 */
+}
+
+.overlay-left ul li {
+  list-style: none;
+  margin-left: 0; /* ✅ 혹시 개별 li에도 여백 있으면 제거 */
+  padding-left: 0;
+}
+/* 대기질 등급 아래 - 주요 도시 대기질 */
+.overlay-cities {
+  position: absolute;
+  top: 127px;
+  left: -70px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 12px 14px;
+  width: 250px;
+  z-index: 2000;
+}
+
+.overlay-cities .city-list {
+  max-height: 350px; /* 🔹 높이 지정 */
+  overflow-y: auto; /* 🔹 세로 스크롤 활성화 */
+  margin-top: 10px;
+  padding-right: 6px; /* 스크롤 여백 */
+}
+
+/* ✅ 스크롤 디자인도 깔끔하게 */
+.overlay-cities .city-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overlay-cities .city-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+/* 오른쪽 상단 - 우리동네 대기질 */
+.overlay-right {
+  position: absolute;
+  top: -30px;
+  right: -70px;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 15px 20px;
+  font-size: 14px;
+  z-index: 2000;
+  width: 250px;
+}
+
+/* 오른쪽 - 대기질 개선 팁 (간격 조정) */
+.overlay-tips {
+  position: absolute;
+  top: 165px; /* ✅ 우리동네 대기질 아래 적절한 간격 */
+  right: -70px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 14px 16px;
+  width: 250px;
+  z-index: 2000;
+}
+
+.overlay-tips h2 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #333;
+  text-align: left;
+  margin: 0 0 8px 0;
+  padding-left: 4px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 6px;
+}
+
+.-tips .tip-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.tip-box {
+  background: #f8f9fa;
+  border-radius: 60px;
+  padding: 8px;
+  margin: 5px;
+  text-align: left;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  font-size: 12px;
+}
+
+/* ✅ 건강 정보 박스 (간격 조정) */
+.overlay-health {
+  position: absolute;
+  top: 345px; /* ✅ 대기질 개선 팁 아래 적절한 간격 (200px + 팁박스 높이 + 간격) */
+  right: -70px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 14px 16px;
+  width: 250px;
+  z-index: 2000;
+}
+
+.overlay-health h2 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #333;
+  text-align: left;
+  margin: 0 0 8px 0;
+  padding-left: 4px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 6px;
+}
+
+.overlay-health .health-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.health-box {
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+}
+
+.health-box:hover {
+  background: #f0f0f0;
+  transform: translateX(3px);
+}
+
+.health-grade {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.health-grade.good {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+
+.health-grade.normal {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+.health-grade.bad {
+  background: #fffbe6;
+  color: #faad14;
+}
+
+.health-grade.verybad {
+  background: #fff1f0;
+  color: #ff4d4f;
+}
+
+.health-text {
+  font-size: 12px;
+  color: #555;
+  font-weight: 500;
+  flex: 1;
+  text-align: right;
+  margin-left: 10px;
+}
+
+main {
+  display: block;
+  min-height: 100vh;   /* 지도 아래로 푸터가 밀리도록 */
+  overflow: visible;   /* 내부 숨김 방지 */
+}
+
+/* 지도 전체 래퍼 */
+.map-wrapper {
+  position: relative;
+  width: 95%;              /* 양옆 여백 약간 주기 */
+  height: 90vh;
+  margin: 0 auto;          /* 가운데 정렬 */
+  border-radius: 20px;     /* 모서리 둥글게 */
+  overflow: hidden;        /* 둥근 테두리 안에서 내용 잘리게 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 은은한 그림자 */
+}
+
+/* 실제 카카오 지도 영역 */
+#kakao-map {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;     /* 지도 모서리도 둥글게 */
+  overflow: hidden;
+  border: 1px solid rgb(192, 192, 192);
+}
+
+/* 지도 섹션과 다음 섹션 사이 간격 */
+.map-section {
+  margin-bottom: 60px; /* ✅ 지도 아래 여백 */
+}
+
+/* 지도 전체 래퍼 스타일 유지 (이전 코드와 함께 사용) */
+.map-wrapper {
+  position: relative;
+  width: 95%;
+  height: 90vh;
+  margin: 0 auto;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgb(192, 192, 192);
+}
+/* 지도 위 제목 */
+.section-title {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  color: rgb(59, 59, 59);
+  margin: 20px 0 5px 0; /* 위 아래 여백 조정 */
+}

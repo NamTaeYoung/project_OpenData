@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.boot.dao.UserDAO">
+	<!--  작성 화면에 닉네임 뜨게-->
+	<select id="findNicknameByUserId" resultType="String" parameterType="String">
+    	SELECT user_nickname FROM opendata_users WHERE user_id = #{userId}
+	</select>
+
+	<select id="loginYn" parameterType="hashmap" resultType="string">
+		select user_pw from opendata_users where user_id=#{user_id}
+	</select>
+
+	<insert id="register" parameterType="hashmap">
+		insert into opendata_users(user_id, user_pw, user_email, user_phone_num,
+		user_post_num, user_address, user_detail_address, user_name,
+		user_nickname)
+		values(#{user_id},#{user_pw},#{user_email},#{user_phone_num},#{user_post_num},#{user_address},#{user_detail_address},#{user_name},#{user_nickname})
+	</insert>
+
+	<!-- 	아이디 중복 체크 -->
+	<select id="checkId" parameterType="string" resultType="int">
+		select count(*) from opendata_users where user_id = #{user_id}
+	</select>
+
+	<!--     이메일 중복 체크 -->
+	<select id="checkEmail" parameterType="String" resultType="int">
+		select count(*) from opendata_users where user_email = #{user_email}
+	</select>
+
+	<select id="findIdByEmail" parameterType="String" resultType="String">
+		select user_id from opendata_users where user_email = #{user_email}
+	</select>
+
+	<!--     아이디, 이메일로 비밀번호를 찾음 -->
+	<select id="findPwByIdEmail" parameterType="map" resultType="string">
+		select user_id from opendata_users where user_id = #{user_id} and
+		user_email = #{user_email}
+	</select>
+
+	<!--     사용자의 아이디와 생성된 토큰을 받아, 데이터베이스 토큰을 저장(사용자가 재설정할 권한이 있음을 증명) -->
+	<update id="saveResetToken" parameterType="map">
+		update opendata_users set user_pwd_reset= #{user_pwd_reset} where
+		user_id= #{user_id}
+	</update>
+
+	<!-- 	 토큰으로 사용자 조회 -->
+	<select id="findUserByResetToken" parameterType="string"
+		resultType="com.boot.dto.UserDTO">
+		select * from opendata_users where user_pwd_reset = #{user_pwd_reset}
+	</select>
+
+	<!--  	토큰으로 비밀번호 업데이트 -->
+	<update id="updatePasswordByToken" parameterType="hashmap">
+		update opendata_users set user_pw= #{user_pw},user_pwd_reset = NULL
+		where user_pwd_reset= #{user_pwd_reset}
+	</update>
+
+	<!-- 아이디로 회원 정보 조회 (잠금상태, 세션용) -->
+	<select id="getUserById" parameterType="string"
+		resultType="com.boot.dto.UserDTO">
+		SELECT *
+		FROM opendata_users
+		WHERE user_id = #{user_id}
+	</select>
+
+	<!-- 로그인 실패 시 시도 횟수 +1, 시간 갱신 -->
+	<update id="updateLoginFail">
+		UPDATE opendata_users
+		SET login_fail_count = login_fail_count + 1,
+		last_fail_time = SYSDATE
+		WHERE user_id = #{user_id}
+	</update>
+
+	<!-- 로그인 성공 시 초기화 -->
+	<update id="resetLoginFail">
+		UPDATE opendata_users
+		SET login_fail_count = 0,
+		last_fail_time = NULL
+		WHERE user_id = #{user_id}
+	</update>
+
+	<!-- 이메일로 기존 회원 조회 -->
+	<select id="getUserByEmail" parameterType="string"
+		resultType="com.boot.dto.UserDTO">
+		SELECT * FROM opendata_users WHERE user_email = #{user_email}
+	</select>
+
+	<!-- 소셜 신규 회원 등록 -->
+	<insert id="insertSocialUser" parameterType="map">
+		INSERT INTO opendata_users (
+		user_id,
+		user_pw,
+		user_email,
+		user_name,
+		user_nickname,
+		login_type,
+		social_id,
+		user_email_chk,
+		user_phone_num,
+		user_post_num,
+		user_address,
+		user_detail_address,
+		reg_date
+		) VALUES (
+		#{user_id},
+		'SOCIAL_LOGIN',
+		#{user_email},
+		#{user_name},
+		#{user_nickname},
+		#{login_type},
+		#{social_id},
+		'Y',
+		'000-0000-0000',
+		'47354',
+		'부산시',
+		'범내골',
+		SYSDATE
+		)
+	</insert>
+	<!-- 마이페이지: 단건 조회 -->
+	<select id="selectUser" parameterType="hashmap" resultType="hashmap">
+		SELECT
+		user_id,
+		user_pw,
+		user_email,
+		user_phone_num,
+		user_post_num,
+		user_address,
+		user_detail_address,
+		user_name,
+		user_nickname,
+		reg_date
+		FROM opendata_users
+		WHERE user_id = #{user_id}
+	</select>
+
+
+	<!-- 마이페이지: 정보 수정 -->
+	<update id="updateUser" parameterType="map">
+		UPDATE opendata_users
+		SET
+		user_name = #{user_name},
+		user_nickname = #{user_nickname},
+		user_pw = NVL(NULLIF(#{user_pw, jdbcType=VARCHAR}, ''), user_pw),
+		user_email = #{user_email},
+		user_phone_num = #{user_phone_num},
+		user_post_num = #{user_post_num},
+		user_address = #{user_address},
+		user_detail_address = #{user_detail_address}
+		WHERE user_id = #{user_id}
+	</update>
+
+
+<!--	 소셜 로그인 회원 탈퇴 -->
+<!--	<delete id="deleteUser" parameterType="string">-->
+<!--		DELETE FROM opendata_users-->
+<!--		WHERE user_id = #{user_id}-->
+<!--	</delete>-->
+
+	<!-- 일반 회원 탈퇴 (비밀번호 확인) -->
+	<delete id="withdraw" parameterType="map">
+		DELETE FROM opendata_users
+		WHERE user_id = #{user_id}
+		AND user_pw = #{user_pw}
+	</delete>
+
+</mapper>
