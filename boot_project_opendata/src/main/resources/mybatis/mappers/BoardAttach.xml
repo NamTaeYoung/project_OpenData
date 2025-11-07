@@ -32,5 +32,23 @@
   WHERE board_no = #{boardNo}
   ORDER BY sort_order, attach_no
 </select>
+<!-- ✅ 단일 첨부 조회 -->
+    <select id="findById" parameterType="long" resultType="com.boot.dto.BoardAttachDTO">
+        SELECT 
+            attach_no AS attachNo, 
+            board_no AS boardNo, 
+            file_name AS fileName, 
+            file_path AS filePath, 
+            uuid, 
+            is_image AS isImage, 
+            thumb_path AS thumbPath,
+            sort_order AS sortOrder
+        FROM post_board_attach
+        WHERE attach_no = #{attachNo}
+    </select>
 
+    <!-- ✅ 단일 첨부 삭제 -->
+    <delete id="delete" parameterType="long">
+        DELETE FROM post_board_attach WHERE attach_no = #{attachNo}
+    </delete>
 </mapper>
