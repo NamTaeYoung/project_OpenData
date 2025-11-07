@@ -29,11 +29,49 @@
           <c:otherwise>
             <a href="<c:url value='/mypage'/>">마이페이지</a>
             <a href="<c:url value='/logout'/>">로그아웃</a>
-            <span class="user-name">${sessionScope.loginDisplayName}님</span>
+            <span class="user-name"><c:out value="${sessionScope.loginDisplayName}"/>님</span>
           </c:otherwise>
         </c:choose>
       </div>
-    </nav>
+	  <div class="city-banner-wrapper">
+        <div class="city-slide" id="headerCitySlide">
+          <c:forEach var="city" items="${cityAverages}">
+            <div class="city-slide-item">
+              ${city.stationName}:
+              미세먼지(
+                <strong class="<c:choose>
+                                 <c:when test='${city.pm10Value <= 30}'>good</c:when>
+                                 <c:when test='${city.pm10Value <= 80}'>normal</c:when>
+                                 <c:when test='${city.pm10Value <= 150}'>bad</c:when>
+                                 <c:otherwise>very-bad</c:otherwise>
+                               </c:choose>">
+                  <c:choose>
+                    <c:when test="${city.pm10Value <= 30}">좋음</c:when>
+                    <c:when test="${city.pm10Value <= 80}">보통</c:when>
+                    <c:when test="${city.pm10Value <= 150}">나쁨</c:when>
+                    <c:otherwise>매우나쁨</c:otherwise>
+                  </c:choose>
+                </strong>
+              )
+              초미세먼지(
+                <strong class="<c:choose>
+                                 <c:when test='${city.pm25Value <= 15}'>good</c:when>
+                                 <c:when test='${city.pm25Value <= 35}'>normal</c:when>
+                                 <c:when test='${city.pm25Value <= 75}'>bad</c:when>
+                                 <c:otherwise>very-bad</c:otherwise>
+                               </c:choose>">
+                  <c:choose>
+                    <c:when test="${city.pm25Value <= 15}">좋음</c:when>
+                    <c:when test="${city.pm25Value <= 35}">보통</c:when>
+                    <c:when test="${city.pm25Value <= 75}">나쁨</c:when>
+                    <c:otherwise>매우나쁨</c:otherwise>
+                  </c:choose>
+                </strong>
+              )
+            </div>
+          </c:forEach>
+        </div>
+      </nav>
   </header>
 
   <!-- 상단 프로모션 -->
@@ -168,5 +206,23 @@
       </div>
     </div>
   </footer>
+  
+  <script>
+	<!-- 3~4초마다 상단 베너 교체-->
+	document.addEventListener("DOMContentLoaded", function() {
+	  const slides = document.querySelectorAll(".city-slide-item");
+	  let currentIndex = 0;
+
+	  if (slides.length > 0) {
+	    slides[currentIndex].classList.add("active");
+
+	    setInterval(() => {
+	      slides[currentIndex].classList.remove("active");
+	      currentIndex = (currentIndex + 1) % slides.length;
+	      slides[currentIndex].classList.add("active");
+	    }, 4000); // ⏱ 4초마다 전환
+	  }
+	});
+  </script>
 </body>
 </html>
