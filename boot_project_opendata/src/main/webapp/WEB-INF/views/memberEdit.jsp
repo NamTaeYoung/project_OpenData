@@ -36,6 +36,7 @@
       max-width:1100px; margin:0 auto;
       padding:14px 20px;
       display:flex; align-items:center; justify-content:space-between; gap:12px;
+	  position: relative; /* ✅ 배너 위치 기준 */
     }
     .brand{
       font-weight:800; letter-spacing:.08em;
@@ -72,7 +73,7 @@
     .promo-nav{
       display: flex;
       align-items: center;
-      gap: 80px;
+      gap: 200px;
     }
     .promo-nav a{
       display: inline-flex;
@@ -100,26 +101,80 @@
       transition: transform .25s ease;
       opacity: .95;
     }
-    .promo-nav a:hover::after{ transform: scaleX(1); }
-    .promo-nav a.active::after{ transform: scaleX(1); }
-    .promo-nav a + a::before{
-      content: "";
-      position: absolute;
-      left: -40px;
-      top: 50%;
-      width: 2px;
-      height: 26px;
-      background: rgba(255,255,255,.65);
-      transform: translateY(-50%);
-      border-radius: 2px;
-    }
+	.promo-nav a:hover::after{ transform: scaleX(1); }
+	.promo-nav a.active::after{ transform: scaleX(1); }
+	.promo-nav a:hover { background: rgba(255,255,255,0.1); }
+
+	.promo-nav a + a::before{
+	  content: "";
+	  position: absolute;
+	  left: -100px;
+	  top: 50%;
+	  width: 2px;
+	  height: 26px;
+	  background: rgba(255,255,255,.65);
+	  transform: translateY(-50%);
+	  border-radius: 2px;
+	}
     @media (max-width: 720px){
       .promo-content{ height: 56px; }
       .promo-nav{ gap: 48px; }
       .promo-nav a{ font-weight: 700; font-size: 18px; }
       .promo-nav a + a::before{ left: -24px; height: 20px; }
     }
+	
+	/* 전체 배너 컨테이너 */
+	.city-banner-wrapper {
+	  position: absolute;
+	  right: -25vw;  
+	  top: 14px;
+	  height: 22px;
+	  width: 22vw;
+	  overflow: hidden;
+	  white-space: nowrap;
+	  text-align: left;
+	  font-size: 0.9rem;
+	  color: #333;
+	  display: inline-block;
+	  vertical-align: middle;
+	  gap: 6px;
+	  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+	}
+	/* 배너 안 텍스트 */
+	.city-slide-item {
+	  position: absolute;
+	  opacity: 0;
+	  transform: translateY(10px);
+	  transition: all 0.6s ease;
+	  color: #444;
+	  font-weight: 500;
+	  letter-spacing: -0.3px;
+	}
 
+	.city-slide-item.active {
+	  opacity: 1;
+	  transform: translateY(0);
+	}
+
+	/* 아이콘 */
+	.city-slide-item::before {
+	  content: "🌤️";
+	  margin-right: 6px;
+	  opacity: 0.9;
+	  font-size: 0.95rem;
+	}
+
+	/* 도시명 강조 */
+	.city-slide-item strong {
+	  margin: 0 2px;
+	  font-weight: 700;
+	}
+	/* 등급 색상 */
+	.good { color: #1e90ff; font-weight: 600; }   
+	.normal { color: #22c55e; font-weight: 600; }  
+	.bad { color: #f59e0b; font-weight: 600; }  
+	.very-bad { color: #ef4444; font-weight: 600; } 
+	
     /* 회원정보 수정 섹션 */
     .edit-section {
       padding: 60px 0;
@@ -234,6 +289,7 @@
       .btn{ width: 100%; }
     }
   </style>
+  <script src="/js/banner.js"></script>
 </head>
 <body>
   <!-- 헤더 & 네비 -->
@@ -255,7 +311,45 @@
           </c:otherwise>
         </c:choose>
       </div>
-    </nav>
+	  <div class="city-banner-wrapper">
+	    <div class="city-slide" id="headerCitySlide">
+	      <c:forEach var="city" items="${cityAverages}">
+	        <div class="city-slide-item">
+	          ${city.stationName}:
+	          미세먼지(
+	            <strong class="<c:choose>
+	                             <c:when test='${city.pm10Value <= 30}'>good</c:when>
+	                             <c:when test='${city.pm10Value <= 80}'>normal</c:when>
+	                             <c:when test='${city.pm10Value <= 150}'>bad</c:when>
+	                             <c:otherwise>very-bad</c:otherwise>
+	                           </c:choose>">
+	              <c:choose>
+	                <c:when test="${city.pm10Value <= 30}">좋음</c:when>
+	                <c:when test="${city.pm10Value <= 80}">보통</c:when>
+	                <c:when test="${city.pm10Value <= 150}">나쁨</c:when>
+	                <c:otherwise>매우나쁨</c:otherwise>
+	              </c:choose>
+	            </strong>
+	          )
+	          초미세먼지(
+	            <strong class="<c:choose>
+	                             <c:when test='${city.pm25Value <= 15}'>good</c:when>
+	                             <c:when test='${city.pm25Value <= 35}'>normal</c:when>
+	                             <c:when test='${city.pm25Value <= 75}'>bad</c:when>
+	                             <c:otherwise>very-bad</c:otherwise>
+	                           </c:choose>">
+	              <c:choose>
+	                <c:when test="${city.pm25Value <= 15}">좋음</c:when>
+	                <c:when test="${city.pm25Value <= 35}">보통</c:when>
+	                <c:when test="${city.pm25Value <= 75}">나쁨</c:when>
+	                <c:otherwise>매우나쁨</c:otherwise>
+	              </c:choose>
+	            </strong>
+	          )
+	        </div>
+	      </c:forEach>
+	    </div>
+	  </nav>
   </header>
 
   <!-- 상단 프로모션 -->
