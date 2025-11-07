@@ -87,7 +87,7 @@ public class BoardController {
         // ✅ 서비스에서 게시글 + 첨부 저장
         Long boardNo = boardService.writeWithAttachments(dto, images);
 
-        // ✅ 완료 후 write_done.jsp로 이동 → model 대신 redirect + boardNo 전달
+        // ✅ 완료 후 detail 로 이동 → model 대신 redirect + boardNo 전달
         return "redirect:/board/detail?boardNo=" + boardNo;
     }
 
@@ -119,10 +119,6 @@ public class BoardController {
         model.addAttribute("nickname", nickname != null ? nickname : "워니");
         model.addAttribute("boardDate", boardDate); // JSP에서 fmt:formatDate로 사용
 
-        List<StationDTO> stations = excelReader.readStations();
-        Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
-
-        model.addAttribute("cityAverages", cityAverages.values());
         return "board/detail";
     }
     
@@ -167,5 +163,72 @@ public class BoardController {
 
         model.addAttribute("cityAverages", cityAverages.values());
         return "board/list";
+        
     }
+ // ✅ 게시글 삭제
+    @GetMapping("/delete/{boardNo}")
+    public String delete(@PathVariable("boardNo") Long boardNo,
+                         HttpSession session,
+                         Model model) {
+
+        String loginId = (String) session.getAttribute("loginId");
+        String role = (String) session.getAttribute("role"); // "ADMIN" 저장된 경우
+
+        // ✅ 게시글 조회 (작성자 확인용)
+        BoardDTO post = boardService.find(boardNo);
+        if (post == null) {
+            model.addAttribute("error", "게시글이 존재하지 않습니다.");
+            return "redirect:/board/list";
+        }
+
+        // ✅ 권한 체크 (작성자 or 관리자)
+        if (loginId == null || (!loginId.equals(post.getUserId()) && !"ADMIN".equals(role))) {
+            model.addAttribute("error", "삭제 권한이 없습니다.");
+            return "redirect:/board/list";
+        }
+
+        // ✅ 삭제 실행
+        boardService.delete(boardNo);
+
+        return "redirect:/board/list";
+    }
+    
+ // ✅ 수정 화면 이동
+    @GetMapping("/edit/{boardNo}")
+    public String editForm(@PathVariable Long boardNo, Model model, HttpSession session) {
+        BoardDTO post = boardService.find(boardNo);
+
+        String loginId = (String) session.getAttribute("loginId");
+        if (post == null || !loginId.equals(post.getUserId())) {
+            return "redirect:/board/detail?boardNo=" + boardNo;
+        }
+
+        model.addAttribute("post", post);
+        model.addAttribute("attaches", boardService.getImages(boardNo));
+        return "board/edit"; // 수정 JSP 페이지
+    }
+    
+    @PostMapping("/edit.do")
+    public String edit(
+            BoardDTO dto,
+            @RequestParam(value = "images", required = false) List<MultipartFile> newImages,
+            @RequestParam(value = "deleteFiles", required = false) List<String> deleteFiles
+    ) throws IOException {
+
+        boardService.update(dto);
+
+        if (deleteFiles != null) {
+            List<Long> deleteIds = deleteFiles.stream()
+                    .map(Long::valueOf)
+                    .toList();
+            boardService.deleteAttachments(deleteIds);
+        }
+
+        if (newImages != null && !newImages.isEmpty()) {
+            boardService.addAttachments(dto.getBoardNo(), newImages);
+        }
+
+        return "redirect:/board/detail?boardNo=" + dto.getBoardNo();
+    }
+
 }
