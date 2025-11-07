@@ -150,7 +150,11 @@ public class ViewController {
     
     // 공지사항 목록
     @GetMapping("/notice")
-    public String notice() {
+    public String notice(Model model) {
+    	List<StationDTO> stations = excelReader.readStations();
+        Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
+
+        model.addAttribute("cityAverages", cityAverages.values());
         return "notice";
     }
     
@@ -217,7 +221,7 @@ public class ViewController {
     public String adminMain(HttpSession session,Model model) {
     	List<StationDTO> stations = excelReader.readStations();
         Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
-
+        
         model.addAttribute("cityAverages", cityAverages.values());
     	// 관리자 권한 체크
     	Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
