@@ -103,8 +103,9 @@
 
 	<update id="update" parameterType="com.boot.dto.BoardDTO">
 		UPDATE post_board
-		SET board_title = #{boardTitle},
-		board_content = #{boardContent},
+		SET 
+		board_title = #{boardTitle},
+		board_content = #{boardContent,jdbcType=CLOB}
 		WHERE board_no = #{boardNo}
 	</update>
 
