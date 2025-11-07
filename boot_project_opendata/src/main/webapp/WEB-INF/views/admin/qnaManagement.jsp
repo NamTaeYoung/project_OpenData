@@ -218,18 +218,13 @@
 
   <!-- 푸터 -->
   <footer class="footer">
-    <div class="footer-container">
-      <div class="footer-brand">대기질 정보 시스템</div>
-      <div class="footer-info">
-        대기질 정보 시스템 | 데이터 출처: 공공데이터포털 (data.go.kr)<br>
-        환경부 실시간 대기질 정보 제공<br>
-        주소 : 부산시 부산진구 범내골
-      </div>
-      <div class="footer-links">
-        <a href="#">이용약관</a>
-        <a href="#">개인정보처리방침</a>
-      </div>
-    </div>
+    <h2>대기질 정보 시스템</h2>
+    <p>대기질 정보 시스템 | 데이터 출처: 공공데이터포털 (data.go.kr)</p>
+    <p>환경부 실시간 대기질 정보 제공</p>
+    <p>주소: 부산시 부산진구 범내골</p>
+    <br>
+    <a href="#">이용약관</a>
+    <a href="#">개인정보처리방침</a>
   </footer>
   <script>
     // ✅ 선택 시 해당 JSP 페이지로 이동
