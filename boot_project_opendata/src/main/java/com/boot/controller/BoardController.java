@@ -5,8 +5,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,9 +22,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.boot.dto.BoardDTO;
+import com.boot.dto.StationDTO;
 import com.boot.dao.UserDAO;
 import com.boot.dto.BoardAttachDTO;
 import com.boot.service.BoardService;
+import com.boot.util.AirQualityCalculator;
+import com.boot.util.ExcelReader;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +43,12 @@ public class BoardController {
     @Value("${file.upload-dir:uploads}")
     private String uploadDir;
 
+    @Autowired
+    private ExcelReader excelReader;
+    
+    @Autowired
+    private AirQualityCalculator airQualityCalculator;
+    
     @GetMapping("/write")
     public String writeForm(HttpSession session, Model model) {
         String loginUserId = (String) session.getAttribute("loginId");
@@ -145,7 +157,11 @@ public class BoardController {
         model.addAttribute("endPage", endPage);
         model.addAttribute("keyword", keyword);
         model.addAttribute("type", type);
+        
+    	List<StationDTO> stations = excelReader.readStations();
+        Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
 
+        model.addAttribute("cityAverages", cityAverages.values());
         return "board/list";
     }
 }
