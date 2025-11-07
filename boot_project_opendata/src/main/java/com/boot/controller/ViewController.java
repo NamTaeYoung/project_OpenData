@@ -82,6 +82,10 @@ public class ViewController {
     // 회원 정보 수정 페이지
     @GetMapping("/mypage/edit")
     public String mypageEdit(HttpSession session, Model model) {
+        List<StationDTO> stations = excelReader.readStations();
+        Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
+
+        model.addAttribute("cityAverages", cityAverages.values());
         // 로그인 체크
         String loginId = (String) session.getAttribute("loginId");
         if (loginId == null || loginId.isEmpty()) {
