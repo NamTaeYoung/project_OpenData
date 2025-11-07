@@ -93,7 +93,13 @@ body {
   transform: translateY(-50%);
   border-radius: 2px;
 }
-
+@media (max-width: 720px){
+  .promo-content{ height: 56px; }
+  .promo-nav{ gap: 48px; }
+  .promo-nav a{ font-weight: 700; font-size: 18px; }
+  .promo-nav a + a::before{ left: -24px; height: 20px; }
+}
+.promo-nav a:hover { background: rgba(255,255,255,0.1); }
 /* 헤더 */
 header{ 
   position:sticky; 
