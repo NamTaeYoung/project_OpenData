@@ -5,8 +5,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,9 +22,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.boot.dto.BoardDTO;
+import com.boot.dto.StationDTO;
 import com.boot.dao.UserDAO;
 import com.boot.dto.BoardAttachDTO;
 import com.boot.service.BoardService;
+import com.boot.util.AirQualityCalculator;
+import com.boot.util.ExcelReader;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +37,15 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 //@RequestMapping("/board")
 public class AdminBoardController {
+	@Autowired
+	private ExcelReader excelReader;
+	
+	@Autowired
+	private AirQualityCalculator airQualityCalculator;
+	
 	private final UserDAO userDAO;
     private final BoardService boardService;
-
+    
     @GetMapping("/boardManagement")
     public String boardManagement(HttpSession session,
                                   @RequestParam(defaultValue = "1") int page,
@@ -76,7 +88,12 @@ public class AdminBoardController {
         model.addAttribute("endPage", endPage);
         model.addAttribute("keyword", keyword);
         model.addAttribute("type", type);
+        
+        List<StationDTO> stations = excelReader.readStations();
+        Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
 
+        model.addAttribute("cityAverages", cityAverages.values());
+        
         // ✅ 5. JSP로 이동
         return "admin/boardManagement";
     }
