@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.boot.dto.StationDTO;
 import com.boot.service.AdminMemberService;
+import com.boot.util.AirQualityCalculator;
+import com.boot.util.ExcelReader;
 
 import javax.servlet.http.HttpSession;
 
@@ -19,6 +22,12 @@ public class AdminMemberController {
     
     @Autowired
     private AdminMemberService adminMemberService;
+    
+    @Autowired
+    private ExcelReader excelReader;
+    
+    @Autowired
+    private AirQualityCalculator airQualityCalculator;
     
     // 회원 관리 목록 페이지
     @GetMapping("/memberManagement")
@@ -31,6 +40,11 @@ public class AdminMemberController {
         
         List<Map<String, Object>> memberList = adminMemberService.getAllMembers();
         model.addAttribute("memberList", memberList);
+        
+        List<StationDTO> stations = excelReader.readStations();
+        Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
+
+        model.addAttribute("cityAverages", cityAverages.values());
         
         return "admin/memberManagement";
     }
