@@ -253,23 +253,31 @@ public class ViewController {
 //   
     // 공지사항 목록
     @GetMapping("/noticeManagement")
-    public String noticeManagement(HttpSession session) {
+    public String noticeManagement(HttpSession session, Model model) {
     	// 관리자 권한 체크
     	Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
     	if (isAdmin == null || !isAdmin) {
     		return "redirect:/admin/login";
     	}
+    	List<StationDTO> stations = excelReader.readStations();
+        Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
+
+        model.addAttribute("cityAverages", cityAverages.values());
     	return "admin/noticeManagement";
     }
     
     // QnA 목록
     @GetMapping("/qnaManagement")
-    public String qnaManagement(HttpSession session) {
+    public String qnaManagement(HttpSession session, Model model) {
     	// 관리자 권한 체크
     	Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
     	if (isAdmin == null || !isAdmin) {
     		return "redirect:/admin/login";
     	}
+    	List<StationDTO> stations = excelReader.readStations();
+        Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
+
+        model.addAttribute("cityAverages", cityAverages.values());
     	return "admin/qnaManagement";
     }
     
