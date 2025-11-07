@@ -25,6 +25,7 @@ header{ position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px s
   max-width:1100px; margin:0 auto;
   padding:14px 20px;
   display:flex; align-items:center; justify-content:space-between; gap:12px;
+  position: relative; /* ✅ 배너 위치 기준 */
 }
 .brand{
   font-weight:800; letter-spacing:.08em;
@@ -110,6 +111,57 @@ header{ position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px s
   .promo-nav a{ font-weight: 700; font-size: 16px; }
   .promo-nav a + a::before{ left: -16px; height: 20px; }
 }
+/* 전체 배너 컨테이너 */
+.city-banner-wrapper {
+  position: absolute;
+  right: -25vw;  
+  top: 14px;
+  height: 22px;
+  width: 22vw;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: left;
+  font-size: 0.9rem;
+  color: #333;
+  display: inline-block;
+  vertical-align: middle;
+  gap: 6px;
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+}
+/* 배너 안 텍스트 */
+.city-slide-item {
+  position: absolute;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.6s ease;
+  color: #444;
+  font-weight: 500;
+  letter-spacing: -0.3px;
+}
+
+.city-slide-item.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 아이콘 */
+.city-slide-item::before {
+  content: "🌤️";
+  margin-right: 6px;
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
+/* 도시명 강조 */
+.city-slide-item strong {
+  margin: 0 2px;
+  font-weight: 700;
+}
+/* 등급 색상 */
+.good { color: #1e90ff; font-weight: 600; }   
+.normal { color: #22c55e; font-weight: 600; }  
+.bad { color: #f59e0b; font-weight: 600; }  
+.very-bad { color: #ef4444; font-weight: 600; } 
 
 /* 공지사항 섹션 */
 .notice-section {
@@ -117,6 +169,8 @@ header{ position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px s
   background: var(--section-bg);
   min-height: calc(100vh - 200px);
 }
+
+
 .notice-container {
   max-width: 1100px;
   margin: 0 auto;
