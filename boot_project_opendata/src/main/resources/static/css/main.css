@@ -1,4 +1,5 @@
 @charset "UTF-8";
+
 :root{
   --brand: #2c5f8d;
   --brand-dark: #1e4261;
@@ -93,13 +94,7 @@ body {
   transform: translateY(-50%);
   border-radius: 2px;
 }
-@media (max-width: 720px){
-  .promo-content{ height: 56px; }
-  .promo-nav{ gap: 48px; }
-  .promo-nav a{ font-weight: 700; font-size: 18px; }
-  .promo-nav a + a::before{ left: -24px; height: 20px; }
-}
-.promo-nav a:hover { background: rgba(255,255,255,0.1); }
+
 /* 헤더 */
 header{ 
   position:sticky; 
@@ -206,7 +201,6 @@ header{
   margin: 0 2px;
   font-weight: 700;
 }
-
 .map-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -587,14 +581,14 @@ header{
 }
 
 .tip-title {
-  font-size: 18px;
+  font-size: 10px;
   font-weight: 700;
   color: var(--text);
   margin: 0 0 12px;
 }
 
 .tip-desc {
-  font-size: 15px;
+  font-size: 10px;
   color: var(--muted);
   line-height: 1.7;
   margin: 0;
@@ -690,8 +684,6 @@ header{
 .dot-normal { background-color: #22c55e; }
 .dot-bad { background-color: #f59e0b; }
 .dot-verybad { background-color: #ef4444; }
-
-
 
 .info-item {
   font-size: 13px;
@@ -844,20 +836,312 @@ html, body {
   z-index: 2;
 }
 
-/* ===== footer ===== */
+/* ===== footer (고급 디자인) ===== */
 .footer {
   position: relative;
-  background: rgb(49, 49, 49);              /* ✅ 검정 배경 */
-  color: #e0e0e0;                /* ✅ 연한 회색 글씨 */
-  padding: 50px 120px;           /* ✅ 위아래 여백 넉넉하게 + 좌우 정렬 여유 */
-  text-align: left;              /* ✅ 왼쪽 정렬 */
+  background-color: rgb(26, 55, 83);
+  color: #e0e0e0;
+  padding: 10px 120px ;
+  text-align: left;
   line-height: 1.8;
-  border-top: none;              /* ✅ 기존 회색 라인 제거 */
+  border-top: 1px solid var(--brand);
   font-size: 15px;
+  margin-top: 80px;
+  overflow: hidden;
 }
 
+/* 배경 장식 패턴 */
+.footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 20% 50%, rgba(44, 95, 141, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(44, 95, 141, 0.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 2.5fr 1.2fr 1.2fr 1.1fr;
+  gap: 50px;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* 브랜드 섹션 */
+.footer-brand {
+  color: var(--brand);
+  font-size: 32px;
+  font-weight: 900;
+  margin-bottom: 25px;
+  letter-spacing: 0.08em;
+  position: relative;
+  padding-bottom: 20px;
+  text-shadow: 0 2px 10px rgba(44, 95, 141, 0.3);
+}
+
+.footer-brand::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 80px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--brand), var(--brand-dark), transparent);
+  border-radius: 2px;
+  box-shadow: 0 0 10px rgba(44, 95, 141, 0.5);
+}
+
+/* 브랜드 설명 */
+.footer-brand-desc {
+  color: #a0a0a0;
+  font-size: 14px;
+  line-height: 1.8;
+  margin-top: 15px;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+/* 정보 섹션 */
+.footer-info {
+  color: #b8b8b8;
+  font-size: 14px;
+  line-height: 2;
+  margin-bottom: 25px;
+}
+
+.footer-info-title {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  letter-spacing: 0.05em;
+  position: relative;
+  padding-left: 15px;
+}
+
+.footer-info-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 16px;
+  background: var(--brand);
+  border-radius: 2px;
+}
+
+.footer-info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 15px;
+  transition: transform 0.3s ease;
+}
+
+.footer-info-item:hover {
+  transform: translateX(5px);
+}
+
+.footer-info-icon {
+  font-size: 18px;
+  color: var(--brand);
+  min-width: 20px;
+  text-align: center;
+  margin-top: 2px;
+}
+
+.footer-info-text {
+  flex: 1;
+  color: #b0b0b0;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.footer-info-text strong {
+  color: #d0d0d0;
+  font-weight: 600;
+}
+
+/* 링크 섹션 */
+.footer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.footer-links-title {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  letter-spacing: 0.05em;
+  position: relative;
+  padding-left: 15px;
+}
+
+.footer-links-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 16px;
+  background: var(--brand);
+  border-radius: 2px;
+}
+
+.footer-links a {
+  color: #b0b0b0;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  position: relative;
+  padding-left: 25px;
+  display: inline-block;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.footer-links a::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  opacity: 0;
+  transition: all 0.3s ease;
+  color: var(--brand);
+  font-size: 12px;
+  transform: translateX(-5px);
+}
+
+.footer-links a:hover {
+  color: #fff;
+  padding-left: 30px;
+  transform: translateX(8px);
+}
+
+.footer-links a:hover::before {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* 소셜 미디어 섹션 */
+.footer-social {
+  margin-top: 10px;
+}
+
+.footer-social-title {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  letter-spacing: 0.05em;
+  position: relative;
+  padding-left: 15px;
+}
+
+.footer-social-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 16px;
+  background: var(--brand);
+  border-radius: 2px;
+}
+
+.footer-social-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.footer-social-link {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #b0b0b0;
+  text-decoration: none;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.footer-social-link:hover {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+  transform: translateY(-3px) scale(1.1);
+  box-shadow: 0 5px 15px rgba(44, 95, 141, 0.4);
+}
+
+/* 푸터 하단 구분선 */
+.footer-bottom {
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-copyright {
+  color: #888;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+.footer-copyright strong {
+  color: var(--brand);
+  font-weight: 600;
+}
+
+.footer-badges {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.footer-badge {
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  font-size: 12px;
+  color: #b0b0b0;
+  transition: all 0.3s ease;
+}
+
+.footer-badge:hover {
+  background: rgba(44, 95, 141, 0.2);
+  border-color: var(--brand);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* 기존 푸터 스타일 호환성 유지 */
 .footer h2 {
-  color: rgb(0, 0, 160);                /* ✅ 파란색 포인트 제목 */
+  color: rgb(255, 255, 255);
   font-size: 26px;
   font-weight: 800;
   margin-bottom: 18px;
@@ -865,7 +1149,7 @@ html, body {
 
 .footer p {
   margin: 4px 0;
-  color: #ccc;                   /* ✅ 본문은 좀 더 연하게 */
+  color: #ccc;
 }
 
 .footer a {
@@ -876,10 +1160,68 @@ html, body {
 }
 
 .footer a:hover {
-  color: #fff;                   /* ✅ 마우스 오버 시 흰색 */
+  color: #fff;
 }
 
+/* 푸터 반응형 */
+@media (max-width: 1024px) {
+  .footer-container {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+  
+  .footer {
+    padding: 60px 60px 40px;
+  }
+}
 
+@media (max-width: 768px) {
+  .footer {
+    padding: 50px 40px 30px;
+  }
+  
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+  
+  .footer-brand {
+    font-size: 26px;
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .footer-social-links {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .footer {
+    padding: 40px 20px 30px;
+  }
+  
+  .footer-brand {
+    font-size: 22px;
+  }
+  
+  .footer-info {
+    font-size: 13px;
+  }
+  
+  .footer-badges {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .footer-badge {
+    width: 100%;
+    text-align: center;
+  }
+}
 
 /* 하단 전체 오버레이 */
 .bottom-overlay {
@@ -898,10 +1240,6 @@ html, body {
   flex-direction: column;
   gap: 4px;
 }
-/* 등급 색상 */
-.good { color: #1e90ff; font-weight: bold; }
-.normal { color: #22c55e; font-weight: bold; }
-.bad { color: #ff5050; font-weight: bold; }
 
 /* 점 색상 */
 .dot-good { background: #1e90ff; }
@@ -926,7 +1264,7 @@ html, body {
 .overlay-left {
   list-style: none;
   position: absolute;
-  top: 20px;
+  top: -30px;
   left: -70px;
   background: rgba(255,255,255,0.95);
   border-radius: 8px;
@@ -950,7 +1288,7 @@ html, body {
 /* 대기질 등급 아래 - 주요 도시 대기질 */
 .overlay-cities {
   position: absolute;
-  top: 195px;
+  top: 127px;
   left: -70px;
   background: rgba(255,255,255,0.95);
   border-radius: 10px;
@@ -959,7 +1297,6 @@ html, body {
   width: 250px;
   z-index: 2000;
 }
-
 
 .overlay-cities .city-list {
   max-height: 350px; /* 🔹 높이 지정 */
@@ -981,7 +1318,7 @@ html, body {
 /* 오른쪽 상단 - 우리동네 대기질 */
 .overlay-right {
   position: absolute;
-  top: 40px;
+  top: -30px;
   right: -70px;
   background: rgba(255, 255, 255, 0.96);
   border-radius: 10px;
@@ -992,48 +1329,15 @@ html, body {
   width: 250px;
 }
 
-/* 오른쪽 - 대기질 개선 팁 */
+/* 오른쪽 - 대기질 개선 팁 (간격 조정) */
 .overlay-tips {
   position: absolute;
-  top: 230px; /* ✅ ‘우리동네 대기질’ 바로 아래 위치 */
+  top: 165px; /* ✅ 우리동네 대기질 아래 적절한 간격 */
   right: -70px;
   background: rgba(255,255,255,0.95);
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  padding: 12px 16px;
-  width: 250px;
-  font-size: 13px;
-  z-index: 2000;
-}
-
-.overlay-tips h2 {
-  text-align: center;     /* ✅ 제목 가운데 정렬 */
-  width: 100%;
-  margin-bottom: 10px;    /* ✅ 아래 여백 */
-}
-
-.tip-row {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.tip-box {
-  background: #f8f9fa;
-  border-radius: 6px;
-  padding: 8px;
-  text-align: left;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-}
-
-.overlay-tips {
-  position: absolute;
-  top: 250px; /* 위치는 그대로 유지 */
-  right: -70px;
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 14px 16px; /* 내부 여백 살짝 넓혀서 숨통 트기 */
+  padding: 14px 16px;
   width: 250px;
   z-index: 2000;
 }
@@ -1042,17 +1346,112 @@ html, body {
   font-size: 15px;
   font-weight: 700;
   color: #333;
-  text-align: left;         /* ✅ 가운데 대신 살짝 왼쪽 정렬로 안정감 */
-  margin: 0 0 8px 0;        /* ✅ 위쪽 여백 제거, 아래쪽만 살짝 */
-  padding-left: 4px;        /* ✅ 살짝 들여쓰기 */
-  border-bottom: 1px solid #ddd; /* ✅ 밑줄 추가로 구분감 */
-  padding-bottom: 6px;      /* ✅ 줄과 텍스트 간 여백 */
+  text-align: left;
+  margin: 0 0 8px 0;
+  padding-left: 4px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 6px;
 }
-.overlay-tips .tip-row {
+
+.-tips .tip-row {
   display: flex;
   flex-direction: column;
-  gap: 8px; /* ✅ 항목 간 간격 */
+  gap: 8px;
   margin-top: 8px;
+}
+
+.tip-box {
+  background: #f8f9fa;
+  border-radius: 60px;
+  padding: 8px;
+  margin: 5px;
+  text-align: left;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  font-size: 12px;
+}
+
+/* ✅ 건강 정보 박스 (간격 조정) */
+.overlay-health {
+  position: absolute;
+  top: 345px; /* ✅ 대기질 개선 팁 아래 적절한 간격 (200px + 팁박스 높이 + 간격) */
+  right: -70px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 14px 16px;
+  width: 250px;
+  z-index: 2000;
+}
+
+.overlay-health h2 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #333;
+  text-align: left;
+  margin: 0 0 8px 0;
+  padding-left: 4px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 6px;
+}
+
+.overlay-health .health-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.health-box {
+  background: #f8f9fa;
+  border-radius: 6px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  transition: all 0.2s ease;
+}
+
+.health-box:hover {
+  background: #f0f0f0;
+  transform: translateX(3px);
+}
+
+.health-grade {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.health-grade.good {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+
+.health-grade.normal {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+.health-grade.bad {
+  background: #fffbe6;
+  color: #faad14;
+}
+
+.health-grade.verybad {
+  background: #fff1f0;
+  color: #ff4d4f;
+}
+
+.health-text {
+  font-size: 12px;
+  color: #555;
+  font-weight: 500;
+  flex: 1;
+  text-align: right;
+  margin-left: 10px;
 }
 
 main {
