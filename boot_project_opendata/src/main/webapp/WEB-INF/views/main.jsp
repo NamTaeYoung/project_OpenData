@@ -33,12 +33,14 @@
             <a href="<c:url value='/admin/login'/>">관리자정보</a>
           </c:when>
           <%-- 로그인 후 --%>
-          <c:otherwise>
-            <a href="<c:url value='/mypage'/>">마이페이지</a>
-            <a href="<c:url value='/logout'/>">로그아웃</a>
-            <span class="user-name"><c:out value="${sessionScope.loginDisplayName}"/>님</span>
-          </c:otherwise>
-        </c:choose>
+		    <c:otherwise>
+		      <c:if test="${sessionScope.isAdmin != true}">
+		        <a href="<c:url value='/mypage'/>">마이페이지</a>
+		      </c:if>
+		      <a href="<c:url value='/logout'/>">로그아웃</a>
+		      <span class="user-name"><c:out value="${sessionScope.loginDisplayName}"/>님</span>
+		    </c:otherwise>
+		  </c:choose>>
       </div>
     </nav>
   </header>
