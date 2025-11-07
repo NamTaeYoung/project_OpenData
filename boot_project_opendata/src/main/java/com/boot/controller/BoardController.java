@@ -119,6 +119,10 @@ public class BoardController {
         model.addAttribute("nickname", nickname != null ? nickname : "워니");
         model.addAttribute("boardDate", boardDate); // JSP에서 fmt:formatDate로 사용
 
+        List<StationDTO> stations = excelReader.readStations();
+        Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
+
+        model.addAttribute("cityAverages", cityAverages.values());
         return "board/detail";
     }
     
