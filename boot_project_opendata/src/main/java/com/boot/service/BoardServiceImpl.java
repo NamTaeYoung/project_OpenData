@@ -182,4 +182,62 @@ public class BoardServiceImpl implements BoardService {
         }
         boardDAO.delete(boardNo);
     }
+    
+    @Override
+    @Transactional
+    public void deleteAttachments(List<Long> attachNos) {
+        for (Long attachNo : attachNos) {
+            BoardAttachDTO file = attachDAO.findById(attachNo);
+            if (file != null) {
+                // 1) DB 삭제
+                attachDAO.delete(attachNo);
+
+                // 2) 실제 파일 삭제
+                File f = new File(file.getFilePath().replace("/upload", uploadDir));
+                if (f.exists()) f.delete();
+
+                // 썸네일 있을 경우 삭제
+                if ("Y".equals(file.getIsImage()) && file.getThumbPath() != null) {
+                    File thumb = new File(file.getThumbPath().replace("/upload", uploadDir));
+                    if (thumb.exists()) thumb.delete();
+                }
+            }
+        }
+    }
+    
+    @Override
+    @Transactional
+    public void addAttachments(Long boardNo, List<MultipartFile> files) throws IOException {
+        if (files == null || files.isEmpty()) return;
+
+        String datePath = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+        File uploadFolder = new File(uploadDir, datePath);
+        if (!uploadFolder.exists()) uploadFolder.mkdirs();
+
+        int sortOrder = attachDAO.findByBoardNo(boardNo).size(); // 기존 파일 개수 이후부터 정렬 시작
+
+        for (MultipartFile file : files) {
+            if (file.isEmpty()) continue;
+
+            String originalName = file.getOriginalFilename();
+            String uuid = UUID.randomUUID().toString();
+            String savedName = uuid + "_" + originalName;
+
+            File saveFile = new File(uploadFolder, savedName);
+            file.transferTo(saveFile);
+
+            String webPath = "/upload/" + datePath + "/" + savedName;
+
+            BoardAttachDTO attachDTO = new BoardAttachDTO();
+            attachDTO.setBoardNo(boardNo);
+            attachDTO.setFileName(originalName);
+            attachDTO.setFilePath(webPath);
+            attachDTO.setUuid(uuid);
+            attachDTO.setIsImage(file.getContentType().startsWith("image") ? "Y" : "N");
+            attachDTO.setSortOrder(sortOrder++);
+
+            attachDAO.insertAttach(attachDTO);
+        }
+    }
+
 }
