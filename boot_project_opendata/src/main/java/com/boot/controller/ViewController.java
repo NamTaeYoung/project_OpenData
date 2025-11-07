@@ -182,7 +182,11 @@ public class ViewController {
     
     // QnA 목록
     @GetMapping("/qna")
-    public String qna(HttpSession session) {
+    public String qna(HttpSession session, Model model) {
+    	List<StationDTO> stations = excelReader.readStations();
+        Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
+
+        model.addAttribute("cityAverages", cityAverages.values());
         // 관리자는 QnA 접근 불가 (지역관리 페이지로 이동)
         Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
         if (isAdmin != null && isAdmin) {
