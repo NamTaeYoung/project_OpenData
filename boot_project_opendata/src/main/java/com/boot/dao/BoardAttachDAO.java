@@ -10,4 +10,6 @@ import com.boot.dto.BoardAttachDTO;
 public interface BoardAttachDAO {
     public int insertAttach(BoardAttachDTO dto);
     List<BoardAttachDTO> findByBoardNo(@Param("boardNo") Long boardNo);
+    BoardAttachDTO findById(@Param("attachNo") Long attachNo);
+    int delete(@Param("attachNo") Long attachNo);
 }
