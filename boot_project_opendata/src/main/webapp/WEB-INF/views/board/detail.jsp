@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/boardDetail.css">
+  <script src="/js/banner.js"></script>
 </head>
 <body>
    <header>
@@ -34,7 +35,45 @@
              </c:otherwise>
            </c:choose>
          </div>
-       </nav>
+		 <div class="city-banner-wrapper">
+		   <div class="city-slide" id="headerCitySlide">
+		     <c:forEach var="city" items="${cityAverages}">
+		       <div class="city-slide-item">
+		         ${city.stationName}:
+		         미세먼지(
+		           <strong class="<c:choose>
+		                            <c:when test='${city.pm10Value <= 30}'>good</c:when>
+		                            <c:when test='${city.pm10Value <= 80}'>normal</c:when>
+		                            <c:when test='${city.pm10Value <= 150}'>bad</c:when>
+		                            <c:otherwise>very-bad</c:otherwise>
+		                          </c:choose>">
+		             <c:choose>
+		               <c:when test="${city.pm10Value <= 30}">좋음</c:when>
+		               <c:when test="${city.pm10Value <= 80}">보통</c:when>
+		               <c:when test="${city.pm10Value <= 150}">나쁨</c:when>
+		               <c:otherwise>매우나쁨</c:otherwise>
+		             </c:choose>
+		           </strong>
+		         )
+		         초미세먼지(
+		           <strong class="<c:choose>
+		                            <c:when test='${city.pm25Value <= 15}'>good</c:when>
+		                            <c:when test='${city.pm25Value <= 35}'>normal</c:when>
+		                            <c:when test='${city.pm25Value <= 75}'>bad</c:when>
+		                            <c:otherwise>very-bad</c:otherwise>
+		                          </c:choose>">
+		             <c:choose>
+		               <c:when test="${city.pm25Value <= 15}">좋음</c:when>
+		               <c:when test="${city.pm25Value <= 35}">보통</c:when>
+		               <c:when test="${city.pm25Value <= 75}">나쁨</c:when>
+		               <c:otherwise>매우나쁨</c:otherwise>
+		             </c:choose>
+		           </strong>
+		         )
+		       </div>
+		     </c:forEach>
+		   </div>
+		 </nav>
      </header>
 
      <!-- 상단 프로모션 -->
