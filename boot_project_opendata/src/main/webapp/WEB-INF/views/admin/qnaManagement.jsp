@@ -58,7 +58,7 @@
           </c:when>
           <%-- 로그인 후 --%>
           <c:otherwise>
-            <a href="<c:url value='/mypage'/>">마이페이지</a>
+			<a href="<c:url value='/adminMain'/>">관리자메인</a>
             <a href="<c:url value='/logout'/>">로그아웃</a>
             <span class="user-name">${sessionScope.loginDisplayName}님</span>
           </c:otherwise>
@@ -206,4 +206,5 @@
   </script>
 </body>
 </html>
+
 
