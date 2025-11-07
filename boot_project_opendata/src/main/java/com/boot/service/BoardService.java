@@ -39,5 +39,7 @@ public interface BoardService {
 
     /** 삭제 */
     void delete(Long boardNo);
+    void deleteAttachments(List<Long> attachNos);
+    void addAttachments(Long boardNo, List<MultipartFile> files) throws IOException;
     
 }
