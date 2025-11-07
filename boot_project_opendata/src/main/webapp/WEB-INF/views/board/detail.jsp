@@ -12,7 +12,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/boardDetail.css">
-  <script src="/js/banner.js"></script>
 </head>
 <body>
    <header>
@@ -35,45 +34,7 @@
              </c:otherwise>
            </c:choose>
          </div>
-		 <div class="city-banner-wrapper">
-		   <div class="city-slide" id="headerCitySlide">
-		     <c:forEach var="city" items="${cityAverages}">
-		       <div class="city-slide-item">
-		         ${city.stationName}:
-		         미세먼지(
-		           <strong class="<c:choose>
-		                            <c:when test='${city.pm10Value <= 30}'>good</c:when>
-		                            <c:when test='${city.pm10Value <= 80}'>normal</c:when>
-		                            <c:when test='${city.pm10Value <= 150}'>bad</c:when>
-		                            <c:otherwise>very-bad</c:otherwise>
-		                          </c:choose>">
-		             <c:choose>
-		               <c:when test="${city.pm10Value <= 30}">좋음</c:when>
-		               <c:when test="${city.pm10Value <= 80}">보통</c:when>
-		               <c:when test="${city.pm10Value <= 150}">나쁨</c:when>
-		               <c:otherwise>매우나쁨</c:otherwise>
-		             </c:choose>
-		           </strong>
-		         )
-		         초미세먼지(
-		           <strong class="<c:choose>
-		                            <c:when test='${city.pm25Value <= 15}'>good</c:when>
-		                            <c:when test='${city.pm25Value <= 35}'>normal</c:when>
-		                            <c:when test='${city.pm25Value <= 75}'>bad</c:when>
-		                            <c:otherwise>very-bad</c:otherwise>
-		                          </c:choose>">
-		             <c:choose>
-		               <c:when test="${city.pm25Value <= 15}">좋음</c:when>
-		               <c:when test="${city.pm25Value <= 35}">보통</c:when>
-		               <c:when test="${city.pm25Value <= 75}">나쁨</c:when>
-		               <c:otherwise>매우나쁨</c:otherwise>
-		             </c:choose>
-		           </strong>
-		         )
-		       </div>
-		     </c:forEach>
-		   </div>
-		 </nav>
+       </nav>
      </header>
 
      <!-- 상단 프로모션 -->
@@ -146,27 +107,27 @@
                 </tr>
               </table>
 
-        <!-- 완료/목록 버튼 -->
-        <div class="form-actions">
-       <%-- 작성자이거나 관리자일 때만 수정/삭제 버튼 노출 --%>
-       <c:if test="${sessionScope.loginId == post.userId || sessionScope.isAdmin == true || sessionScope.userRole == 'ADMIN'}">
-         <div class="form-actions">
-           <button type="button" class="btn btn-write"
-                   onclick="location.href='${pageContext.request.contextPath}/board/edit/${post.boardNo}'">수정</button>
+			  <!-- 완료/목록 버튼 -->
+			          <div class="form-actions">
+			         <%-- 작성자이거나 관리자일 때만 수정/삭제 버튼 노출 --%>
+			         <c:if test="${sessionScope.loginId == post.userId || sessionScope.isAdmin == true || sessionScope.userRole == 'ADMIN'}">
+			           <div class="form-actions">
+			             <button type="button" class="btn btn-write"
+			                     onclick="location.href='${pageContext.request.contextPath}/board/edit/${post.boardNo}'">수정</button>
 
-           <button type="button" class="btn btn-delete"
-                   onclick="if(confirm('삭제하시겠습니까?')) location.href='${pageContext.request.contextPath}/board/delete/${post.boardNo}'">삭제</button>
-         </div>
-       </c:if>
-       <%-- 목록 버튼은 항상 보이게 --%>
-       <div class="form-actions">
-         <button type="button" class="btn btn-list"
-                 onclick="location.href='${pageContext.request.contextPath}/board/list'">목록</button>
-       </div>
-        </div>
-      </form>
-    </div>
-  </section>
+			             <butto   n type="button" class="btn btn-delete"
+			                     onclick="if(confirm('삭제하시겠습니까?')) location.href='${pageContext.request.contextPath}/board/delete/${post.boardNo}'">삭제</button>
+			           </div>
+			         </c:if>
+			         <%-- 목록 버튼은 항상 보이게 --%>
+			         <div class="form-actions">
+			           <button type="button" class="btn btn-list"
+			                   onclick="location.href='${pageContext.request.contextPath}/board/list'">목록</button>
+			         </div>
+			          </div>
+			        </form>
+			      </div>
+			    </section>
 
   <!-- 푸터(생략 가능) -->
 </body>
