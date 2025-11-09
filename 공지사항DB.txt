@@ -1,0 +1,99 @@
+-- ===============================
+-- 1️⃣ 기존 객체 정리 (안전 삭제)
+-- ===============================
+BEGIN EXECUTE IMMEDIATE 'DROP TABLE notice_board_attach CASCADE CONSTRAINTS PURGE'; EXCEPTION WHEN OTHERS THEN NULL; END;
+/
+BEGIN EXECUTE IMMEDIATE 'DROP TABLE notice_board CASCADE CONSTRAINTS PURGE'; EXCEPTION WHEN OTHERS THEN NULL; END;
+/
+BEGIN EXECUTE IMMEDIATE 'DROP SEQUENCE NOTICE_BOARD_SEQ'; EXCEPTION WHEN OTHERS THEN NULL; END;
+/
+BEGIN EXECUTE IMMEDIATE 'DROP SEQUENCE NOTICE_BOARD_ATTACH_SEQ'; EXCEPTION WHEN OTHERS THEN NULL; END;
+/
+
+-- ===============================
+-- 2️⃣ 공지사항 본문 테이블
+-- ===============================
+CREATE TABLE notice_board (
+  notice_no      NUMBER         PRIMARY KEY,
+  user_id        VARCHAR2(60)   NOT NULL,             -- 작성자 (관리자 또는 사용자)
+  notice_title   VARCHAR2(200)  NOT NULL,             -- 제목
+  notice_content CLOB           NOT NULL,             -- 본문 (긴 글 가능)
+  notice_date    TIMESTAMP(6)   DEFAULT SYSTIMESTAMP NOT NULL,
+  notice_hit     NUMBER         DEFAULT 0 NOT NULL    -- 조회수
+);
+
+-- 시퀀스 생성
+CREATE SEQUENCE NOTICE_BOARD_SEQ
+  START WITH 1
+  INCREMENT BY 1
+  NOCACHE;
+
+-- 조회 성능 향상용 인덱스
+CREATE INDEX idx_notice_board_date ON notice_board(notice_date);
+CREATE INDEX idx_notice_board_user ON notice_board(user_id);
+
+-- ===============================
+-- 3️⃣ 첨부파일 테이블
+-- ===============================
+CREATE TABLE notice_board_attach (
+  attach_no   NUMBER         PRIMARY KEY,
+  notice_no   NUMBER         NOT NULL,
+  file_name   VARCHAR2(300)  NOT NULL,
+  file_path   VARCHAR2(300),
+  uuid        VARCHAR2(100),
+  is_image    CHAR(1)        DEFAULT 'Y',
+  thumb_path  VARCHAR2(300),
+  sort_order  NUMBER         DEFAULT 0
+);
+
+-- 시퀀스 생성
+CREATE SEQUENCE NOTICE_BOARD_ATTACH_SEQ
+  START WITH 1
+  INCREMENT BY 1
+  NOCACHE;
+
+-- FK (공지사항 삭제 시 첨부도 삭제)
+ALTER TABLE notice_board_attach
+  ADD CONSTRAINT fk_nba_notice
+  FOREIGN KEY (notice_no)
+  REFERENCES notice_board(notice_no)
+  ON DELETE CASCADE;
+
+-- 이미지 여부 체크 제약조건
+ALTER TABLE notice_board_attach
+  ADD CONSTRAINT chk_nba_is_image CHECK (is_image IN ('Y', 'N'));
+
+-- 목록 조회 최적화 인덱스
+CREATE INDEX idx_nba_notice_primary
+  ON notice_board_attach(notice_no, sort_order, attach_no);
+
+-- (옵션) 대표 이미지 1개만 허용
+CREATE UNIQUE INDEX uidx_nba_one_primary
+  ON notice_board_attach (notice_no, DECODE(sort_order, 0, 0, NULL));
+
+-- ===============================
+-- 4️⃣ 테스트용 더미 데이터
+-- ===============================
+BEGIN
+  FOR i IN 1..20 LOOP
+    INSERT INTO notice_board (
+      notice_no,
+      user_id,
+      notice_title,
+      notice_content,
+      notice_date,
+      notice_hit
+    ) VALUES (
+      NOTICE_BOARD_SEQ.NEXTVAL,
+      'admin01',                      -- 관리자 계정 or 로그인 아이디
+      '공지사항 제목 ' || i,
+      '이것은 테스트 공지사항 내용입니다. (' || i || ')',
+      SYSTIMESTAMP,
+      0
+    );
+  END LOOP;
+  COMMIT;
+END;
+/
+
+COMMIT;
