@@ -163,7 +163,7 @@
 	                <td>${board.boardNo}</td>
 	                <td>
 	                  <!-- 상세: 조회수 +1은 컨트롤러에서 처리 X (관리자용은 증가 안 함) -->
-	                  <a href="${pageContext.request.contextPath}/adminDetail?boardNo=${board.boardNo}">
+	                   <a href="${pageContext.request.contextPath}/admin/board/detail?boardNo=${board.boardNo}">
 	                    <c:out value="${board.boardTitle}" />
 	                  </a>
 	                </td>
