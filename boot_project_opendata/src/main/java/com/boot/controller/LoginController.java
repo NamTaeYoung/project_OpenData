@@ -85,6 +85,7 @@ public class LoginController {
             userService.resetLoginFail(userId);
             session.setAttribute("loginId", userId);
             session.setAttribute("loginDisplayName", user.getUser_name());
+            session.setAttribute("loginDisplayNickName", user.getUser_nickname()); // ✅ 닉네임 추가
             session.setAttribute("isAdmin", false);
             
             return "redirect:/main";
