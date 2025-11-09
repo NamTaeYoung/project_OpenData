@@ -72,6 +72,7 @@ public class OAuthController {
                 // 같은 플랫폼 → 로그인 허용
                 session.setAttribute("loginId", existing.getUser_id());
                 session.setAttribute("loginDisplayName", existing.getUser_name());
+                session.setAttribute("loginDisplayNickName", existing.getUser_nickname()); // ✅ 닉네임 추가
                 session.setAttribute("loginType", existingType);
                 return "redirect:/main";
             } else {
@@ -99,6 +100,7 @@ public class OAuthController {
         // 세션 저장
         session.setAttribute("loginId", map.get("user_id"));
         session.setAttribute("loginDisplayName", userInfo.getName());
+        session.setAttribute("loginDisplayNickName", userInfo.getNickname()); // ✅ 닉네임 추가     
         session.setAttribute("loginType", map.get("login_type"));
         return "redirect:/main";
     }
