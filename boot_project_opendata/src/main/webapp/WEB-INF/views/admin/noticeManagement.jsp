@@ -49,98 +49,98 @@
   <header>
     <nav class="nav" aria-label="주요 메뉴">
       <a href="/adminMain" class="brand">대기질 정보</a>
-      <!-- 로그인 전/후 분기 -->
       <div class="nav-right">
         <c:choose>
-          <%-- 로그인 전 --%>
           <c:when test="${empty sessionScope.loginDisplayName}">
             <a href="<c:url value='/login'/>">로그인</a>
             <a href="<c:url value='/register'/>">회원가입</a>
           </c:when>
-          <%-- 로그인 후 --%>
           <c:otherwise>
-			<a href="<c:url value='/adminMain'/>">관리자메인</a>
+            <a href="<c:url value='/adminMain'/>">관리자메인</a>
             <a href="<c:url value='/logout'/>">로그아웃</a>
             <span class="user-name">${sessionScope.loginDisplayName}님</span>
           </c:otherwise>
         </c:choose>
       </div>
-	  <div class="city-banner-wrapper">
-	    <div class="city-slide" id="headerCitySlide">
-	      <c:forEach var="city" items="${cityAverages}">
-	        <div class="city-slide-item">
-	          ${city.stationName}:
-	          미세먼지(
-	            <strong class="<c:choose>
-	                             <c:when test='${city.pm10Value <= 30}'>good</c:when>
-	                             <c:when test='${city.pm10Value <= 80}'>normal</c:when>
-	                             <c:when test='${city.pm10Value <= 150}'>bad</c:when>
-	                             <c:otherwise>very-bad</c:otherwise>
-	                           </c:choose>">
-	              <c:choose>
-	                <c:when test="${city.pm10Value <= 30}">좋음</c:when>
-	                <c:when test="${city.pm10Value <= 80}">보통</c:when>
-	                <c:when test="${city.pm10Value <= 150}">나쁨</c:when>
-	                <c:otherwise>매우나쁨</c:otherwise>
-	              </c:choose>
-	            </strong>
-	          )
-	          초미세먼지(
-	            <strong class="<c:choose>
-	                             <c:when test='${city.pm25Value <= 15}'>good</c:when>
-	                             <c:when test='${city.pm25Value <= 35}'>normal</c:when>
-	                             <c:when test='${city.pm25Value <= 75}'>bad</c:when>
-	                             <c:otherwise>very-bad</c:otherwise>
-	                           </c:choose>">
-	              <c:choose>
-	                <c:when test="${city.pm25Value <= 15}">좋음</c:when>
-	                <c:when test="${city.pm25Value <= 35}">보통</c:when>
-	                <c:when test="${city.pm25Value <= 75}">나쁨</c:when>
-	                <c:otherwise>매우나쁨</c:otherwise>
-	              </c:choose>
-	            </strong>
-	          )
-	        </div>
-	      </c:forEach>
-	    </div>
-	  </nav>
+
+      <!-- 도시 대기질 배너 -->
+      <div class="city-banner-wrapper">
+        <div class="city-slide" id="headerCitySlide">
+          <c:forEach var="city" items="${cityAverages}">
+            <div class="city-slide-item">
+              ${city.stationName}:
+              미세먼지(
+                <strong class="<c:choose>
+                                 <c:when test='${city.pm10Value <= 30}'>good</c:when>
+                                 <c:when test='${city.pm10Value <= 80}'>normal</c:when>
+                                 <c:when test='${city.pm10Value <= 150}'>bad</c:when>
+                                 <c:otherwise>very-bad</c:otherwise>
+                               </c:choose>">
+                  <c:choose>
+                    <c:when test="${city.pm10Value <= 30}">좋음</c:when>
+                    <c:when test="${city.pm10Value <= 80}">보통</c:when>
+                    <c:when test="${city.pm10Value <= 150}">나쁨</c:when>
+                    <c:otherwise>매우나쁨</c:otherwise>
+                  </c:choose>
+                </strong>
+              )
+              초미세먼지(
+                <strong class="<c:choose>
+                                 <c:when test='${city.pm25Value <= 15}'>good</c:when>
+                                 <c:when test='${city.pm25Value <= 35}'>normal</c:when>
+                                 <c:when test='${city.pm25Value <= 75}'>bad</c:when>
+                                 <c:otherwise>very-bad</c:otherwise>
+                               </c:choose>">
+                  <c:choose>
+                    <c:when test="${city.pm25Value <= 15}">좋음</c:when>
+                    <c:when test="${city.pm25Value <= 35}">보통</c:when>
+                    <c:when test="${city.pm25Value <= 75}">나쁨</c:when>
+                    <c:otherwise>매우나쁨</c:otherwise>
+                  </c:choose>
+                </strong>
+              )
+            </div>
+          </c:forEach>
+        </div>
+      </div>
+    </nav>
   </header>
 
   <!-- 상단 프로모션 -->
-  <div class="promo" role="note" aria-label="프로모션">
+  <div class="promo" role="note" aria-label="관리자 메뉴">
     <div class="promo-content">
       <div class="promo-nav">
-		<a href="/adminMain" class="nav-category">상세정보</a>
-		<a href="/memberManagement" class="nav-board">회원관리</a>
-		<a href="/boardManagement" class="nav-notice">게시판관리</a>
-		<a href="/qna" class="nav-qna">지역관리</a>
+        <a href="/adminMain" class="nav-category">상세정보</a>
+        <a href="/memberManagement" class="nav-board">회원관리</a>
+        <a href="/boardManagement" class="nav-notice">게시판관리</a>
+        <a href="/qnaManagement" class="nav-qna">지역관리</a>
       </div>
     </div>
   </div>
 
-  <!-- 게시판 섹션 -->
+  <!-- 공지사항 관리 섹션 -->
   <section class="board-section">
     <div class="board-container">
 
-	<div class="board-header" style="display: flex; justify-content: space-between; align-items: center;">
-	     
-	     <!-- ✅ 공지사항 제목 + 게시판 선택을 같은 줄에 배치 -->
-	     <div style="display: flex; align-items: center; gap: 10px;">
-	       <h1 class="board-title" style="margin: 0;">공지사항</h1>
-	       <div class="board-filter">
-	         <select id="boardType" name="boardType" class="board-select" onchange="moveToBoardPage(this.value)">
-	           <option value="">선택하세요</option>
-	           <option value="board">게시판 관리</option>
-	           <option value="notice">공지사항 관리</option>
-	           <option value="qna">Q&A 관리</option>
-	         </select>
-	       </div>
-	     </div>
+      <!-- 헤더 -->
+      <div class="board-header" style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <h1 class="board-title" style="margin: 0;">공지사항 관리</h1>
+          <div class="board-filter">
+            <select id="boardType" name="boardType" class="board-select" onchange="moveToBoardPage(this.value)">
+              <option value="">선택하세요</option>
+              <option value="board">게시판 관리</option>
+              <option value="notice" selected>공지사항 관리</option>
+              <option value="qna">Q&A 관리</option>
+            </select>
+          </div>
+        </div>
 
-	     <!-- ✅ 글쓰기 버튼은 오른쪽 유지 -->
-	     <a href="/noticeManagement/noticeWrite" class="write-btn">글쓰기</a>
-	   </div>
+        <!-- 공지사항 글쓰기 버튼 -->
+        <a href="/admin/notice/write" class="write-btn">공지 등록</a>
+      </div>
 
+      <!-- 공지 목록 테이블 -->
       <div class="board-table-wrapper">
         <table class="board-table">
           <thead>
@@ -153,41 +153,40 @@
             </tr>
           </thead>
           <tbody>
-            <%-- 백엔드 연동 시: <c:forEach> 태그로 데이터 표시 
-            <c:forEach var="board" items="${boardList}">
-              <tr>
-                <td>${board.id}</td>
-                <td>
-                  <a href="/board/${board.id}">
-                    ${board.title}
-                    <c:if test="${not empty board.fileName}">
-                      <span class="file-icon">📎</span>
-                    </c:if>
-                  </a>
-                </td>
-                <td>${board.writer}</td>
-                <td>${board.regDate}</td>
-                <td>${board.viewCount}</td>
-              </tr>
-            </c:forEach>
-            --%>
-            <!-- 데이터가 없을 때 -->
-            <tr>
-              <td colspan="5" class="empty-row">
-                등록된 게시글이 없습니다.
-              </td>
-            </tr>
+            <c:choose>
+              <c:when test="${empty noticeList}">
+                <tr>
+                  <td colspan="5" class="empty-row">등록된 공지사항이 없습니다.</td>
+                </tr>
+              </c:when>
+              <c:otherwise>
+                <c:forEach var="notice" items="${noticeList}">
+                  <tr>
+                    <td>${notice.noticeNo}</td>
+                    <td>
+                      <a href="${pageContext.request.contextPath}/admin/notice/detail?noticeNo=${notice.noticeNo}">
+                        <c:out value="${notice.noticeTitle}" />
+                      </a>
+                    </td>
+                    <td>관리자</td>
+                    <td>${notice.formattedDate}</td>
+                    <td>${notice.noticeHit}</td>
+                  </tr>
+                </c:forEach>
+              </c:otherwise>
+            </c:choose>
           </tbody>
         </table>
       </div>
 
       <!-- 검색 영역 -->
       <div class="board-search">
-        <form method="get" action="/board" id="searchForm">
-          <select name="searchType" style="padding: 12px; border: 2px solid #eee; border-radius: 12px; font-size: 14px; margin-right: 8px;">
-            <option value="title">제목</option>
-            <option value="content">내용</option>
-            <option value="writer">작성자</option>
+        <form method="get" action="${pageContext.request.contextPath}/noticeManagement" id="searchForm">
+          <select name="type" style="padding: 12px; border: 2px solid #eee; border-radius: 12px; font-size: 14px; margin-right: 8px;">
+            <option value="tc" ${type == 'tc' ? 'selected' : ''}>제목+내용</option>
+            <option value="title" ${type == 'title' ? 'selected' : ''}>제목</option>
+            <option value="content" ${type == 'content' ? 'selected' : ''}>내용</option>
+            <option value="writer" ${type == 'writer' ? 'selected' : ''}>작성자</option>
           </select>
           <input type="text" name="keyword" class="search-input" placeholder="검색어를 입력하세요" value="${param.keyword}">
           <button type="submit" class="search-btn">검색</button>
@@ -196,25 +195,17 @@
 
       <!-- 페이지네이션 -->
       <div class="pagination">
-        <%-- 백엔드 연동 시: 페이지네이션 데이터 표시
-        <c:if test="${pageInfo.hasPrev}">
-          <a href="/board?page=${pageInfo.prevPage}">이전</a>
+        <c:if test="${startPage > 1}">
+          <a href="${pageContext.request.contextPath}/noticeManagement?page=${startPage-1}"><</a>
         </c:if>
-        <c:forEach var="pageNum" begin="${pageInfo.startPage}" end="${pageInfo.endPage}">
-          <c:choose>
-            <c:when test="${pageNum == pageInfo.currentPage}">
-              <span class="active">${pageNum}</span>
-            </c:when>
-            <c:otherwise>
-              <a href="/board?page=${pageNum}">${pageNum}</a>
-            </c:otherwise>
-          </c:choose>
+
+        <c:forEach var="i" begin="${startPage}" end="${endPage}">
+          <a href="${pageContext.request.contextPath}/noticeManagement?page=${i}" class="${i == page ? 'active' : ''}">${i}</a>
         </c:forEach>
-        <c:if test="${pageInfo.hasNext}">
-          <a href="/board?page=${pageInfo.nextPage}">다음</a>
+
+        <c:if test="${endPage < pageCount}">
+          <a href="${pageContext.request.contextPath}/noticeManagement?page=${endPage+1}">></a>
         </c:if>
-        --%>
-        <span class="active">1</span>
       </div>
     </div>
   </section>
@@ -229,19 +220,19 @@
     <a href="#">이용약관</a>
     <a href="#">개인정보처리방침</a>
   </footer>
+
   <script>
     // ✅ 선택 시 해당 JSP 페이지로 이동
-	function moveToBoardPage(type) {
-	  if (type === "board") {
-	    location.href = "/boardManagement";
-	  } else if (type === "notice") {
-	    location.href = "/noticeManagement";
-	  } else if (type === "qna") {
-		location.href = "/qnaManagement";
-	  } 
-	}
+    function moveToBoardPage(type) {
+      if (type === "board") {
+        location.href = "/boardManagement";
+      } else if (type === "notice") {
+        location.href = "/noticeManagement";
+      } else if (type === "qna") {
+        location.href = "/qnaManagement";
+      }
+    }
   </script>
 </body>
 </html>
-
 
