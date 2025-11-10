@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.boot.dao.NoticeBoardDAO">
+
+  <!-- ✅ 공지 등록 -->
+  <insert id="insert" parameterType="com.boot.dto.NoticeBoardDTO">
+    <selectKey keyProperty="noticeNo" resultType="long" order="BEFORE">
+      SELECT NOTICE_BOARD_SEQ.NEXTVAL FROM dual
+    </selectKey>
+    INSERT INTO notice_board (
+      notice_no, user_id, notice_title, notice_content, notice_date, notice_hit
+    ) VALUES (
+      #{noticeNo}, #{userId}, #{noticeTitle}, #{noticeContent}, SYSTIMESTAMP, 0
+    )
+  </insert>
+
+  <!-- ✅ 단건 조회 -->
+  <select id="find" parameterType="long" resultType="com.boot.dto.NoticeBoardDTO">
+    SELECT
+      notice_no AS noticeNo,
+      user_id AS userId,
+      notice_title AS noticeTitle,
+      notice_content AS noticeContent,
+      notice_date AS noticeDate,
+      notice_hit AS noticeHit
+    FROM notice_board
+    WHERE notice_no = #{noticeNo}
+  </select>
+
+  <!-- ✅ 현재 시퀀스 값 -->
+  <select id="selectCurrNoticeNo" resultType="long">
+    SELECT NOTICE_BOARD_SEQ.CURRVAL FROM dual
+  </select>
+
+  <!-- ✅ resultMap -->
+  <resultMap id="NoticeBoardMap" type="com.boot.dto.NoticeBoardDTO">
+    <id column="notice_no" property="noticeNo"/>
+    <result column="user_id" property="userId"/>
+    <result column="notice_title" property="noticeTitle"/>
+    <result column="notice_content" property="noticeContent"/>
+    <result column="notice_date" property="noticeDate"/>
+    <result column="notice_hit" property="noticeHit"/>
+  </resultMap>
+
+  <sql id="columns">
+    notice_no, user_id, notice_title, notice_content, notice_date, notice_hit
+  </sql>
+
+  <!-- ✅ 목록 (페이징, Oracle 12c+) -->
+  <select id="selectPage" resultMap="NoticeBoardMap">
+  <![CDATA[
+    SELECT * FROM (
+        SELECT ROWNUM rn, t.*
+        FROM (
+            SELECT n.notice_no, n.user_id, n.notice_title, n.notice_content,
+                   n.notice_date, n.notice_hit
+            FROM notice_board n
+            ORDER BY n.notice_no DESC
+        ) t
+        WHERE ROWNUM <= #{offset} + #{size}
+    )
+    WHERE rn > #{offset}
+  ]]>
+  </select>
+
+  <!-- ✅ 전체 건수 -->
+  <select id="countAll" resultType="int">
+    SELECT COUNT(*) FROM notice_board
+  </select>
+
+  <!-- ✅ 단건 조회 (JOIN 없음) -->
+  <select id="selectOne" parameterType="long" resultMap="NoticeBoardMap">
+    SELECT n.notice_no, n.user_id, n.notice_title, n.notice_content,
+           n.notice_date, n.notice_hit
+    FROM notice_board n
+    WHERE n.notice_no = #{noticeNo}
+  </select>
+
+  <!-- ✅ 수정 -->
+  <update id="update" parameterType="com.boot.dto.NoticeBoardDTO">
+    UPDATE notice_board
+    SET
+      notice_title = #{noticeTitle},
+      notice_content = #{noticeContent, jdbcType=CLOB}
+    WHERE notice_no = #{noticeNo}
+  </update>
+
+  <!-- ✅ 삭제 -->
+  <delete id="delete" parameterType="long">
+    DELETE FROM notice_board
+    WHERE notice_no = #{noticeNo}
+  </delete>
+
+  <!-- ✅ 조회수 +1 -->
+  <update id="increaseHit" parameterType="long">
+    UPDATE notice_board
+    SET notice_hit = notice_hit + 1
+    WHERE notice_no = #{noticeNo}
+  </update>
+
+  <!-- ✅ 검색 조건 -->
+  <sql id="searchWhere">
+    <where>
+      <if test="keyword != null and keyword != ''">
+        <choose>
+          <when test="type == 'title'">
+            n.notice_title LIKE '%' || #{keyword} || '%'
+          </when>
+          <when test="type == 'content'">
+            n.notice_content LIKE '%' || #{keyword} || '%'
+          </when>
+          <when test="type == 'writer'">
+            n.user_id LIKE '%' || #{keyword} || '%'
+          </when>
+          <otherwise>
+            (n.notice_title LIKE '%' || #{keyword} || '%'
+             OR n.notice_content LIKE '%' || #{keyword} || '%')
+          </otherwise>
+        </choose>
+      </if>
+    </where>
+  </sql>
+
+  <!-- ✅ 검색 + 페이징 -->
+  <select id="searchPage" resultMap="NoticeBoardMap">
+  <![CDATA[
+    SELECT * FROM (
+      SELECT ROWNUM rn, t.*
+      FROM (
+        SELECT n.notice_no, n.user_id, n.notice_title, n.notice_content,
+               n.notice_date, n.notice_hit
+        FROM notice_board n
+  ]]>
+    <include refid="searchWhere"/>
+  <![CDATA[
+        ORDER BY n.notice_no DESC
+      ) t
+      WHERE ROWNUM <= #{offset} + #{size}
+    )
+    WHERE rn > #{offset}
+  ]]>
+  </select>
+
+  <!-- ✅ 검색 총 건수 -->
+  <select id="countSearch" resultType="int">
+    SELECT COUNT(*) FROM notice_board n
+    <include refid="searchWhere"/>
+  </select>
+
+  <!-- ✅ 특정 작성자(관리자) 기준 최근 공지 5개 -->
+  <select id="selectByUserId" parameterType="string" resultMap="NoticeBoardMap">
+  <![CDATA[
+    SELECT * FROM (
+      SELECT n.notice_no, n.user_id, n.notice_title, n.notice_content,
+             n.notice_date, n.notice_hit
+      FROM notice_board n
+      WHERE n.user_id = #{userId}
+      ORDER BY n.notice_no DESC
+    )
+    WHERE ROWNUM <= 5
+  ]]>
+  </select>
+
+</mapper>
