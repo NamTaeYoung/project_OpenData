@@ -152,25 +152,25 @@ public class ViewController {
         }
     }
     
-    // 공지사항 목록
-    @GetMapping("/notice")
-    public String notice(Model model) {
-    	List<StationDTO> stations = excelReader.readStations();
-        Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
-
-        model.addAttribute("cityAverages", cityAverages.values());
-        return "notice";
-    }
+//    // 공지사항 목록
+//    @GetMapping("/notice")
+//    public String notice(Model model) {
+//    	List<StationDTO> stations = excelReader.readStations();
+//        Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
+//
+//        model.addAttribute("cityAverages", cityAverages.values());
+//        return "notice";
+//    }
     
-    // 공지사항 글쓰기 페이지 (관리자만 접근 가능)
-    @GetMapping("/noticeManagement/noticeWrite")
-    public String adminWrite(HttpSession session) {
-    	Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
-    	if (isAdmin == null || !isAdmin) {
-    		return "redirect:/noticeManagement";
-    	}
-    	return "admin/noticeWrite";
-    }
+//    // 공지사항 글쓰기 페이지 (관리자만 접근 가능)
+//    @GetMapping("/noticeManagement/noticeWrite")
+//    public String adminWrite(HttpSession session) {
+//    	Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
+//    	if (isAdmin == null || !isAdmin) {
+//    		return "redirect:/noticeManagement";
+//    	}
+//    	return "admin/noticeWrite";
+//    }
     
     // 공지사항 글쓰기 페이지 (관리자만 접근 가능)
 //    @GetMapping("/notice/write")
@@ -252,20 +252,20 @@ public class ViewController {
 //    }
 //   
     // 공지사항 목록
-    @GetMapping("/noticeManagement")
-    public String noticeManagement(HttpSession session, Model model) {
-    	// 관리자 권한 체크
-    	Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
-    	if (isAdmin == null || !isAdmin) {
-    		return "redirect:/admin/login";
-    	}
-    	List<StationDTO> stations = excelReader.readStations();
-        Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
-
-        model.addAttribute("cityAverages", cityAverages.values());
-    	return "admin/noticeManagement";
-    }
-    
+//    @GetMapping("/noticeManagement")
+//    public String noticeManagement(HttpSession session, Model model) {
+//    	// 관리자 권한 체크
+//    	Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
+//    	if (isAdmin == null || !isAdmin) {
+//    		return "redirect:/admin/login";
+//    	}
+//    	List<StationDTO> stations = excelReader.readStations();
+//        Map<String, StationDTO> cityAverages = airQualityCalculator.calculateCityAverages(stations);
+//
+//        model.addAttribute("cityAverages", cityAverages.values());
+//    	return "admin/noticeManagement";
+//    }
+//    
     // QnA 목록
     @GetMapping("/qnaManagement")
     public String qnaManagement(HttpSession session, Model model) {
@@ -293,11 +293,11 @@ public class ViewController {
     	 return "boardDetailManagement";
      }
      
-//     공지사항 상세 (나중에 구현)
-     @GetMapping("/notice/{id}")
-     public String noticeDetail(@PathVariable Long id, Model model) {
-         return "noticeDetail";
-     }
+////     공지사항 상세 (나중에 구현)
+//     @GetMapping("/notice/{id}")
+//     public String noticeDetail(@PathVariable Long id, Model model) {
+//         return "noticeDetail";
+//     }
     
     // QnA 상세 (나중에 구현)
      @GetMapping("/qna/{id}")
